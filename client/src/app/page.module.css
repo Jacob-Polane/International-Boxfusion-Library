@@ -1,0 +1,62 @@
+.row{
+  margin-top:30px;
+}
+
+.logo{
+  margin-right:200px;
+}
+
+.logoImage{
+  width: 60px;
+  height: 60px;
+
+  border-radius: 50%;
+  border: 2px solid #45b26b;
+  margin-top:-10px;
+}
+.nav{
+  font-size: 18px;
+  font-weight: bold;
+  color: #1BA1E2;
+}
+
+.menu{
+  width:30px;
+  height: 30px;
+  
+  position: fixed;
+  right:50px;
+}
+.menuContainer{
+}
+
+.homeMessage{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.homeMessageh1{
+  color:#45b26b
+}
+
+.homeMessageParagraph{
+  width: 70%;
+}
+
+.homeImage{
+  margin-top: 100px;
+  height: 90%;
+  width: 90%;
+}
+
+.loginButton{
+  font-size: 15;
+  font-weight: bold;
+
+  background-color: #1BA1E2;
+  color:white;
+
+  width: 100px;
+}
