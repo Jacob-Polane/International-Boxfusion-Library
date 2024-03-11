@@ -1,3 +1,4 @@
+'use client'
 import React from 'react';
 import { Col, Row,Button } from 'antd';
 import menu from '../../public/menu.png';
@@ -5,8 +6,12 @@ import home from '../../public/home.jpg';
 import styles from "./page.module.css";
 import Image from 'next/image';
 import Logo from '../../public/Logo.jpg'
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
+  //router
+  const router = useRouter()
+  
   return (
   
   <>
@@ -76,7 +81,7 @@ export default function Home() {
            sit amet consectetur adipisicing elit. Deleniti et laboriosam at alias dignissimos dolores autem maxime id ducimus 
            nesciunt quasi cum inventore nisi, eum neque voluptates natus, expedita quidem.
         </p>
-        <Button className={styles.loginButton}>Login</Button>
+        <Button className={styles.loginButton}onClick={()=> router.push('/login')} >Login</Button>
       </Col>
       <Col span={12}>
         <Image className={styles.homeImage} src={home} alt=''/>
