@@ -1,79 +1,25 @@
 'use client'
 import React from 'react';
 import { Col, Row,Button } from 'antd';
-import menu from '../../public/menu.png';
 import home from '../../public/home.jpg';
 import styles from "./page.module.css";
 import Image from 'next/image';
-import Logo from '../../public/Logo.jpg'
 import { useRouter } from 'next/navigation';
+import NavBar from '@/components/navbar/NavBar';
 
 export default function Home() {
+  
   //router
   const router = useRouter()
   
   return (
   
   <>
-    <Row className={styles.row}>
-        <Col 
-          className={styles.logo}
-          key='logo'
-          xs={{ flex: '100%' }}
-          sm={{ flex: '50%' }}
-          md={{ flex: '40%' }}
-          lg={{ flex: '20%' }}
-          xl={{ flex: '15%' }}>
-
-         <Image className={styles.logoImage} src={Logo} alt='logo'/>
-        </Col>
-
-        <Col
-          className={styles.nav}
-          key='explore'
-          xs={{ flex: '100%' }}
-          sm={{ flex: '50%' }}
-          md={{ flex: '40%' }}
-          lg={{ flex: '20%' }}
-          xl={{ flex: '15%' }}
-        >
-
-          Explore
-        </Col>
-
-        <Col
-          className={styles.nav}
-          key='search'
-          xs={{ flex: '100%' }}
-          sm={{ flex: '50%' }}
-          md={{ flex: '40%' }}
-          lg={{ flex: '20%' }}
-          xl={{ flex: '15%' }}
-        >
-
-          Search
-        </Col>
-
-        
-        <Col
-          className={styles.nav}
-          key='about'
-          xs={{ flex: '100%' }}
-          sm={{ flex: '50%' }}
-          md={{ flex: '40%' }}
-          lg={{ flex: '20%' }}
-          xl={{ flex: '15%' }}
-        >
-
-          About
-        </Col>
-        <Image  className={styles.menu} src={menu} alt='menu'/> 
-    </Row>
-
+    <NavBar/>
     <Row>
       <Col 
-      className={styles.homeMessage}
-      span={12}>
+        className={styles.homeMessage}
+        span={12}>
         <h1 className={styles.homeMessageh1}>Welcome to BIL</h1>
         <p className={styles.homeMessageParagraph} >
           Lorem ipsum dolor sit amet consectetur, adipisicing elit. Alias, aut natus impedit incidunt explicabo velit culpa!

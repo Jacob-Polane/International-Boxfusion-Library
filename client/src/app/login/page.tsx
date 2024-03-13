@@ -6,7 +6,7 @@ import login from '../../../public/login.png';
 import style from './style.module.css';
 import { useRouter } from 'next/navigation';
 
-const Login = () =>{
+const Login: React.FC  = () =>{
 
     //router
     const router = useRouter();

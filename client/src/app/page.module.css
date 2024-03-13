@@ -24,6 +24,10 @@
   color: #1BA1E2;
 }
 
+.nav:hover{
+  cursor: pointer;
+}
+
 .menu{
   width:40px;
   height: 30px;
