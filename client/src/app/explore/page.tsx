@@ -4,11 +4,10 @@ import NavBar from "@/components/navbar/NavBar";
 import Image from 'next/image';
 import Book from '../../../public/book1.jpg';
 import Banner from '../../../public/banner.jpg';
-import Banner2 from '../../../public/banner2.jpg';
 import {RightOutlined} from '@ant-design/icons'
 import HorizontalContainer from "@/components/HorizontalContainer/HorizontalContainer";
 import { Carousel,Card} from 'antd';
-
+import { useStyles } from "./style.explore";
 const {Meta} = Card;
 
 interface Idata{
@@ -18,16 +17,10 @@ interface Idata{
     Description:string
 }
 
-const contentStyle: React.CSSProperties = {
-    marginTop:'20px',
-    height: '160px',
-    width:'100%',
-    color: '#fff',
-    lineHeight: '160px',
-    textAlign: 'center',
-    background: '#1BA1E2',
-  };
+
 const Explore: React.FC  = () =>{
+    const {styles}=useStyles();
+
     const data:Idata[]=[
         {
             title: 'The late night',
@@ -91,33 +84,33 @@ const Explore: React.FC  = () =>{
         },
     ]
     return (
-        <>
+        <div>
             <NavBar/>
             <Carousel autoplay autoplaySpeed={5000}>
               <div>
-                <h1 style={contentStyle}>Welcome to Boxfusion International Library</h1>
+                <h1 className={styles.contentStyle}>Welcome to Boxfusion International Library</h1>
               </div>
               <div>
-                <div style={contentStyle}>
+                <div className={styles.contentStyle}>
                     <h1 >Login  <RightOutlined />    Collect    <RightOutlined />   Read</h1>
                 </div>
                 
               </div>
               <div>
-                <Image style={contentStyle} src={Banner} alt ='book'/>
+                <Image className={styles.contentStyle} src={Banner} alt ='book'/>
               </div>
             </Carousel>
             <div>
-                <h1 style={{marginLeft:30,color:'#1BA1E2'}}>
+                <h1 className={styles.heading}>
                     Trending
                 </h1>
                 <HorizontalContainer>
                     {data.map((data)=>{
                         return (
-                            <div style={{ display: 'inline-block', width: '270px' }}>
+                            <div className={styles.cardiv}>
                             <Card
                               hoverable
-                              style={{ width: 240, marginLeft:20}}
+                              className={styles.card}
                               cover={<Image alt="example" src={Book} />}
                             >
                               <Meta title={data.title} description={data.Description} />
@@ -128,16 +121,16 @@ const Explore: React.FC  = () =>{
                  </HorizontalContainer>
              </div>
              <div>
-                <h1 style={{marginLeft:30,color:'#1BA1E2'}}>
+                <h1 className={styles.heading}>
                     Top 5 Genres
                 </h1>
                 <HorizontalContainer>
                     {data.map((data)=>{
                         return (
-                            <div style={{ display: 'inline-block', width: '270px' }}>
+                            <div className={styles.cardiv}>
                             <Card
                               hoverable
-                              style={{ width: 240, marginLeft:20}}
+                              className={styles.card}
                               cover={<Image alt="example" src={Book} />}
                             >
                               <Meta title={data.title} description={data.Description} />
@@ -147,7 +140,7 @@ const Explore: React.FC  = () =>{
                     })}
                  </HorizontalContainer>
              </div>
-        </>
+        </div>
     );
 }
 

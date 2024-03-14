@@ -3,11 +3,14 @@ import React from "react";
 import {Row,Col,Form,Input,Checkbox,Button, type FormProps} from 'antd';
 import Image from 'next/image';
 import login from '../../../public/login.png';
-import style from './style.module.css';
+import { useStyles } from "./style.module";
 import { useRouter } from 'next/navigation';
 
 const Login: React.FC  = () =>{
 
+
+    //styles
+    const {styles}=useStyles();
     //router
     const router = useRouter();
 
@@ -24,13 +27,13 @@ const Login: React.FC  = () =>{
     const onFinishFailed:FormProps<FieldType>["onFinishFailed"] = (error) =>{}
 
     return (
-        <div className={style.container}>
-        <Row className={style.content}>
-            <Col className={style.loginImageContainer}>
+        <div className={styles.container}>
+        <Row className={styles.content}>
+            <Col className={styles.loginImageContainer}>
                 <Image src={login} alt='logo pic'/>
             </Col>
-            <Col className={style.loginForm}>
-                    <h1 className={style.loginFormH1}>
+            <Col className={styles.loginForm}>
+                    <h1 className={styles.loginFormH1}>
                         Hi,<br/>Welcome back 
                     </h1>
                     <Form
@@ -66,7 +69,7 @@ const Login: React.FC  = () =>{
                     >
                       <Checkbox>Remember me</Checkbox>
                     </Form.Item> */}
-                    <p className={style.notregistered} onClick={()=> router.push('/signup')}>Not Register?</p>
+                    <p className={styles.notregistered} onClick={()=> router.push('/signup')}>Not Register?</p>
                     <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                       <Button type="primary" htmlType="button" >
                         Submit
