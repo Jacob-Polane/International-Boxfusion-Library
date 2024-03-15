@@ -7,10 +7,17 @@ using System.Threading.Tasks;
 
 namespace Template.Domain.Model
 {
-    internal class Book : FullAuditedEntity<Guid>
+    public class Book : FullAuditedEntity<Guid>
     {
         public virtual string Title { get; set; }
         public virtual string Author { get; set; }
-        public virtual string Isbn{ get; set; }
+        public virtual string? Isbn10{ get; set; }
+        public virtual string? Isbn13 { get; set; }
+        public virtual string? Publisher { get; set; }
+        public virtual DateTime? PublishedDate { get; set; }
+        public virtual int Frequency {  get; set; }
+        public virtual string Category { get; set; }
+        public virtual int Number_Avaliable { get; set; }
+
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Template.EntityFrameworkCore;
 
@@ -11,9 +12,11 @@ using Template.EntityFrameworkCore;
 namespace Template.Migrations
 {
     [DbContext(typeof(TemplateDbContext))]
-    partial class TemplateDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240315100821_add Books entity")]
+    partial class addBooksentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1610,9 +1613,6 @@ namespace Template.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Isbn10")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Isbn13")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("LastModificationTime")
