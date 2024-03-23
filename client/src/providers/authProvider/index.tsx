@@ -18,7 +18,7 @@ const AuthProvider: FC<PropsWithChildren<{}>> = ({ children }) => {
   });
   
   const { mutate: createUserHttp } = useMutate({
-    path: `${process.env.NEXT_PUBLIC_API_BASE_URI}services/app/Person/Create`,
+    path: `${process.env.NEXT_PUBLIC_API_BASE_URI}services/app/Borrower/Create`,
     verb: 'POST',
   });
 
@@ -38,24 +38,20 @@ const AuthProvider: FC<PropsWithChildren<{}>> = ({ children }) => {
         message.error('Invalid username or password');
       }
     } catch (error) {
-      console.log(error);
       message.error('Login failed');
     }
   };
 
   const createUser = async (payload: IUser) => {
-    console.log("response::", payload);
     try {
       const response = await createUserHttp(payload);
-      console.log("response::", response);
       if (response.success) {
-        message.success("User successfully created");
-        console.log(response.result); 
+        message.success("User successfully created Login");
+        push('/login');
       } else {
         message.error("Failed to create user");
       }
     } catch (error) {
-      console.error("User creation error:", error);
       message.error("An error occurred during user creation");
     }
   };
@@ -72,10 +68,8 @@ const AuthProvider: FC<PropsWithChildren<{}>> = ({ children }) => {
         },
       });
       const data = await response.json();
-      console.log(data);
       dispatch(setCurrentUserRequestAction(data.result.user));
     } catch (error) {
-      console.log(error);
       message.error("Failed to get user details");
     }
   };
@@ -83,7 +77,6 @@ const AuthProvider: FC<PropsWithChildren<{}>> = ({ children }) => {
   const logOutUser = () => {
     dispatch(logOutUserRequestAction());
     localStorage.removeItem('token');
-    console.log(state)
   };
 
   return (

@@ -18,13 +18,14 @@ export interface IQuery{
 }
 
 export interface IUser {
-    id: string;
-    Username: string;
-    Name: string;
-    Surname: string;
-    PhoneNumber: string;
-    EmailAddress: string;
-    Password: string;
+    id?: string;
+    username: string;
+    name: string;
+    surname: string;
+    phoneNumber: string;
+    email: string;
+    password: string;
+    gender:number;
   }
   
 

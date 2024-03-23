@@ -5,11 +5,14 @@ import Image from 'next/image';
 import signup from '../../../public/login.png';
 import {useStyles} from './style.module';
 import { useRouter } from 'next/navigation';
+import { IUser } from "../../../models/interface";
+import { useLoginActions } from "@/providers/authProvider";
 
 const Signup: React.FC = () => {
 
     const router = useRouter();
     const {styles}=useStyles();
+    const {createUser} =useLoginActions();
     //custom type ... editing needed
     type FieldType = {
         name?: string;
@@ -17,8 +20,10 @@ const Signup: React.FC = () => {
       };
     
     //On Submit
-    const onFinish :FormProps<FieldType>["onFinish"] =(values)=>{
-      console.log(values);
+    const onFinish :FormProps<IUser>["onFinish"] =(values:IUser)=>{
+      if(createUser){
+        createUser(values);
+      }
     }
 
     const onFinishFailed:FormProps<FieldType>["onFinishFailed"] = (error) =>{}
@@ -72,7 +77,7 @@ const Signup: React.FC = () => {
                     </Form.Item>
 
                     <Form.Item
-                      name="phone"
+                      name="phoneNumber"
                       label="phone number"
                       tooltip="Please enter your phone number?"
                       rules={[{ required: true, message: 'Please input your cellphone number!', whitespace: true }]}
@@ -146,9 +151,9 @@ const Signup: React.FC = () => {
                       key='gender'
                     >
                       <Select placeholder="select your gender">
-                        <Select.Option value="male">Male</Select.Option>
-                        <Select.Option value="female">Female</Select.Option>
-                        <Select.Option value="other">Other</Select.Option>
+                        <Select.Option value="1">Male</Select.Option>
+                        <Select.Option value="2">Female</Select.Option>
+                        <Select.Option value="3">Other</Select.Option>
                       </Select>
                     </Form.Item>
                     <p className={styles.notregistered} onClick={()=> router.push('/login')}>Already Register?</p>
