@@ -4,13 +4,15 @@ import {useStyles} from "./style.module";
 import Image from 'next/image';
 import Logo from '../../../public/Logo.jpg'
 import { useRouter } from 'next/navigation';
-import menu from '../../../public/menu.png';
 import { useDrawer,useCheckAUth } from './helper';
+import Profile from '../profile/Profile';
+import { useLoginState } from '@/providers/authProvider';
 const NavBar : FC = ()=>{
 
   const router=useRouter();
   const {styles}=useStyles();
-  const {open,showDrawer,onClose}=useDrawer();
+  const state=useLoginState();
+  const {open,onClose,showDrawer}=useDrawer();
   const {logIn,checkLogin,logOutUser}=useCheckAUth();
   
   useEffect(()=>{
@@ -87,15 +89,11 @@ const NavBar : FC = ()=>{
           Logout
         </Col>}
         {open?
-          <Drawer title="Basic Drawer" onClose={onClose} open={open}>
-          <div>
-            
-          </div>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
+          <Drawer title="Profile Details" onClose={onClose} open={open}>
+            <Profile/>
           </Drawer>
           :
-          <Image  className={styles.menu} src={menu} alt='menu' onClick={showDrawer}/>
+          logIn&&<Col className={styles.navUser} onClick={showDrawer}>{state.currentUser?.name}</Col>
         }
     </Row>
     );

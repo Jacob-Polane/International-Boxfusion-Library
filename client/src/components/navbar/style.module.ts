@@ -43,6 +43,22 @@ export const useStyles=createStyles(({token,css})=>({
     
     position: fixed;
     right:50px;
-  `)
+  `),
+  navUser:
+  css(`
+    font-size: 18px;
+    font-weight: bold;
+    color: #45b26b;
+    border:2px solid #45b26b;
+    width:100px;
+    text-align:center;
+    height:30px;
+    background-color:#c4f3cc;
+    border-radius:5px;
+    align-items:center;
+
+  &:hover{
+    cursor: pointer;
+  }`),
 
 }))
