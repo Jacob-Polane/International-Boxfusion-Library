@@ -1,16 +1,21 @@
 'use client'
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Col, Row,Button } from 'antd';
 import home from '../../public/home.jpg';
 import styles from "./page.module.css";
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import NavBar from '@/components/navbar/NavBar';
+import { useCheckAUth } from '@/components/navbar/helper';
 
 export default function Home() {
-  
+  //useState
+  const {logIn,checkLogin} =useCheckAUth();
   //router
   const router = useRouter()
+  useEffect(()=>{
+   checkLogin();
+  })
   
   return (
   
@@ -27,7 +32,7 @@ export default function Home() {
            sit amet consectetur adipisicing elit. Deleniti et laboriosam at alias dignissimos dolores autem maxime id ducimus 
            nesciunt quasi cum inventore nisi, eum neque voluptates natus, expedita quidem.
         </p>
-        <Button className={styles.loginButton}onClick={()=> router.push('/login')} >Login</Button>
+        {!logIn&&<Button className={styles.loginButton}onClick={()=> router.push('/login')} >Login</Button>}
       </Col>
       <Col span={12}>
         <Image className={styles.homeImage} src={home} alt=''/>

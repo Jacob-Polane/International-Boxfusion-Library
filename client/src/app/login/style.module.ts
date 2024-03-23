@@ -1,6 +1,6 @@
 import { createStyles,css } from "antd-style";
 
-export const useStyles =createStyles(()=>({
+export const useStyles = createStyles(()=>({
     container:
     css(`
         height: 100vh;
@@ -34,9 +34,18 @@ export const useStyles =createStyles(()=>({
         margin-top:-30px;
     `),
     notregistered:css(`
+        margin-left:30px;
         &:hover{
             cursor: pointer;
             color: blue;
+            
         }
+    `),
+    RememberMeStyle:
+    css(`
+        display:flex;
+        flex-direction:row;
+        width:100%;
+        align-items:center;
     `)
 }));

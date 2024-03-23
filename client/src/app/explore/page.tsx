@@ -8,6 +8,7 @@ import {RightOutlined} from '@ant-design/icons'
 import HorizontalContainer from "@/components/HorizontalContainer/HorizontalContainer";
 import { Carousel,Card} from 'antd';
 import { useStyles } from "./style.explore";
+import { useRouter } from "next/navigation";
 const {Meta} = Card;
 
 interface Idata{
@@ -20,6 +21,7 @@ interface Idata{
 
 const Explore: React.FC  = () =>{
     const {styles}=useStyles();
+    const router=useRouter();
 
     const data:Idata[]=[
         {
@@ -87,18 +89,17 @@ const Explore: React.FC  = () =>{
         <div>
             <NavBar/>
             <Carousel autoplay autoplaySpeed={5000}>
-              <div>
-                <h1 className={styles.contentStyle}>Welcome to Boxfusion International Library</h1>
+            <div>
+              <h1 className={styles.contentStyle}>Welcome to Boxfusion International Library</h1>
+            </div>
+            <div>
+              <div className={styles.contentStyle}>
+                  <h1 >Login  <RightOutlined />    Collect    <RightOutlined />   Read</h1>
               </div>
-              <div>
-                <div className={styles.contentStyle}>
-                    <h1 >Login  <RightOutlined />    Collect    <RightOutlined />   Read</h1>
-                </div>
-                
-              </div>
-              <div>
-                <Image className={styles.contentStyle} src={Banner} alt ='book'/>
-              </div>
+            </div>
+            <div>
+              <h1 className={styles.contentStyle}>Trending, Top Genres, Recommendations</h1>
+            </div>
             </Carousel>
             <div>
                 <h1 className={styles.heading}>
@@ -107,7 +108,7 @@ const Explore: React.FC  = () =>{
                 <HorizontalContainer>
                     {data.map((data)=>{
                         return (
-                            <div className={styles.cardiv}>
+                            <div className={styles.cardiv} onClick={()=>router.push('/book')}>
                             <Card
                               hoverable
                               className={styles.card}

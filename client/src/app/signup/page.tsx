@@ -3,13 +3,13 @@ import React from "react";
 import {Row,Col,Form,Input,Button, type FormProps,Select,Space} from 'antd';
 import Image from 'next/image';
 import signup from '../../../public/login.png';
-import style from './style.module.css';
+import {useStyles} from './style.module';
 import { useRouter } from 'next/navigation';
 
 const Signup: React.FC = () => {
 
     const router = useRouter();
-
+    const {styles}=useStyles();
     //custom type ... editing needed
     type FieldType = {
         name?: string;
@@ -17,17 +17,19 @@ const Signup: React.FC = () => {
       };
     
     //On Submit
-    const onFinish :FormProps<FieldType>["onFinish"] =(values)=>{}
+    const onFinish :FormProps<FieldType>["onFinish"] =(values)=>{
+      console.log(values);
+    }
 
     const onFinishFailed:FormProps<FieldType>["onFinishFailed"] = (error) =>{}
     return (
-        <div className={style.container}>
-        <Row className={style.content}>
-            <Col className={style.signupImageContainer}>
+        <div className={styles.container}>
+        <Row className={styles.content}>
+            <Col className={styles.signupImageContainer}>
                 <Image src={signup} alt='logo pic'/>
             </Col>
-            <Col className={style.signupForm}>
-                <h1 className={style.signupFormH1}>Sign up</h1>
+            <Col className={styles.signupForm}>
+                <h1 >Sign up</h1>
                 <div>
                     <Form
                     name="basic"
@@ -39,7 +41,7 @@ const Signup: React.FC = () => {
                     onFinishFailed={onFinishFailed}
                     autoComplete="off"
   >                 <Form.Item label="Fullname">
-                        <Space className={style.space}>
+                        <Space className={styles.space}>
                         <Form.Item<string>
                             name="name"
                             rules={[{ required: true, message: 'Please input your name!' }]}
@@ -67,6 +69,17 @@ const Signup: React.FC = () => {
                       key='username'
                     >
                       <Input placeholder="username"/>
+                    </Form.Item>
+
+                    <Form.Item
+                      name="phone"
+                      label="phone number"
+                      tooltip="Please enter your phone number?"
+                      rules={[{ required: true, message: 'Please input your cellphone number!', whitespace: true }]}
+                      style={{marginTop:-10}}
+                      key='phonenumber'
+                    >
+                      <Input placeholder="011-011-6123"/>
                     </Form.Item>
 
                     <Form.Item
@@ -138,7 +151,7 @@ const Signup: React.FC = () => {
                         <Select.Option value="other">Other</Select.Option>
                       </Select>
                     </Form.Item>
-                    <p className={style.notregistered} onClick={()=> router.push('/login')}>Already Register?</p>
+                    <p className={styles.notregistered} onClick={()=> router.push('/login')}>Already Register?</p>
                     <Form.Item wrapperCol={{ offset: 8, span: 16 }} key='button'>
                       <Button type="primary" htmlType="submit">
                         Register
