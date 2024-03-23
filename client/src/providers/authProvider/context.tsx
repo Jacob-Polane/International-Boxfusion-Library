@@ -1,22 +1,5 @@
 import { createContext } from 'react';
-
-export interface IUser {
-    id: string;
-    Username: string;
-    Name: string;
-    Surname: string;
-    PhoneNumber: string;
-    EmailAddress: string;
-    Password: string;
-  }
-  
-
-export interface ILogin{
-    userNameOrEmailAddress: string,
-    password: string,
-    remember:boolean
-  }
-
+import { ILogin,IUser } from '../../../models/interface';
 
 export const INITIAL_STATE: IUserStateContext={}
 

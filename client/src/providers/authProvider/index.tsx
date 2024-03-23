@@ -4,9 +4,9 @@ import { message } from 'antd';
 import { useGet, useMutate } from 'restful-react';
 import { useRouter } from 'next/navigation';
 import { reducer} from './reducer';
-import { ILogin, INITIAL_STATE, IUser, IUserActionContext, IUserStateContext, UserActionContext, UserContext } from './context';
+import { INITIAL_STATE, IUserActionContext, IUserStateContext, UserActionContext, UserContext } from './context';
 import { loginUserRequestAction,logOutUserRequestAction,setCurrentUserRequestAction} from './actions';
-
+import { ILogin ,IUser} from '../../../models/interface';
 
 const AuthProvider: FC<PropsWithChildren<{}>> = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
@@ -30,9 +30,7 @@ const AuthProvider: FC<PropsWithChildren<{}>> = ({ children }) => {
       const response = await loginUserHttp(payload);
       if (response.success) {
         localStorage.setItem('token', response.result.accessToken);
-
         dispatch(loginUserRequestAction(response.result));
-        console.log(response.result)
         await getUserDetails();
         push("/explore");
         message.success('Login successful');
@@ -52,8 +50,7 @@ const AuthProvider: FC<PropsWithChildren<{}>> = ({ children }) => {
       console.log("response::", response);
       if (response.success) {
         message.success("User successfully created");
-        console.log(response.result);
-       
+        console.log(response.result); 
       } else {
         message.error("Failed to create user");
       }
@@ -86,6 +83,7 @@ const AuthProvider: FC<PropsWithChildren<{}>> = ({ children }) => {
   const logOutUser = () => {
     dispatch(logOutUserRequestAction());
     localStorage.removeItem('token');
+    console.log(state)
   };
 
   return (

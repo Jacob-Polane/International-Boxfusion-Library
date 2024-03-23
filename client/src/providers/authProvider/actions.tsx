@@ -1,14 +1,13 @@
 import  React from 'react';
 import { createAction } from 'redux-actions';
-import {ILogin, IUser, IUserStateContext} from './context';
+import {IUserStateContext} from './context';
+import { IUser,ILogin } from '../../../models/interface';
 
 export enum UserActionEnum{
     LOGIN_USER = 'LOGIN',
-    CREATE_USRER = 'CREATE',
     LOGOUT_USER = 'LOGOUT',
     SET_CURRENT_USER = 'SET_CURRENT_USER',
-    GET_USER_DETAILS='GET_USER',
-    GET_USER_ID = 'GET_USER_ID',
+
 }
 
 export const loginUserRequestAction = createAction<IUserStateContext, ILogin>(UserActionEnum.LOGIN_USER,(UserLogin)=>({UserLogin}))
