@@ -32,17 +32,17 @@ const Book: FC =()=>{
                         <h3 style={{color:'gray'}}>Authors:</h3>
                         <div>
                             {(state.book?.author.split(','))?.map((data)=>(
-                                <Tag color='cyan'> {data}</Tag>
+                                <Tag key={data} color='cyan'> {data}</Tag>
                             ))}
                         </div>
                         <p style={{color:'gray'}}><span style={{fontWeight:'bold',fontSize:14}}>Published date:</span> {state.book?.publishedDate}</p>
                         <div>
                             {(state.book?.category.split(','))?.map((data)=>(
-                                <Tag color='gold'> {data}</Tag>
+                                <Tag key={data} color='gold'> {data}</Tag>
                             ))}
                         </div>
                     </div>
-                    <div className={styles.buttonSelect}>
+                    <div key={styles.buttonSelect} className={styles.buttonSelect}>
                         <Button style={{backgroundColor:'#1BA1E2',color:'white'}}className={styles.button}>Review Book</Button>
                         <Button style={{backgroundColor:'green',color:'white'}} className={styles.button}>Request</Button>
                     </div>

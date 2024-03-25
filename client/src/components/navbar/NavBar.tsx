@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useDrawer,useCheckAUth } from './helper';
 import Profile from '../profile/Profile';
 import { useLoginState } from '@/providers/authProvider';
+
 const NavBar : FC = ()=>{
 
   const router=useRouter();
@@ -93,7 +94,7 @@ const NavBar : FC = ()=>{
             <Profile/>
           </Drawer>
           :
-          logIn&&<Col className={styles.navUser} onClick={showDrawer}>{state.currentUser?.name}</Col>
+          logIn&&<Col className={styles.navUser} onClick={showDrawer}>{state.currentUser?.userName}</Col>
         }
     </Row>
     );

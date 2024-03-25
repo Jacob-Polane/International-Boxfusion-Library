@@ -108,7 +108,7 @@ const Explore: React.FC  = () =>{
                 <HorizontalContainer>
                     {data.map((data)=>{
                         return (
-                            <div className={styles.cardiv} onClick={()=>router.push('/book')}>
+                            <div key={styles.cardiv} className={styles.cardiv} onClick={()=>router.push('/book')}>
                             <Card
                               hoverable
                               className={styles.card}
@@ -128,7 +128,7 @@ const Explore: React.FC  = () =>{
                 <HorizontalContainer>
                     {data.map((data)=>{
                         return (
-                            <div className={styles.cardiv}>
+                            <div key={styles.cardiv} className={styles.cardiv}>
                             <Card
                               hoverable
                               className={styles.card}

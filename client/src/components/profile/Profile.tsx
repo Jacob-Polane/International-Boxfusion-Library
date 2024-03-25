@@ -17,8 +17,7 @@ const Profile:FC =()=>{
         router.push('/');
     }
     useEffect(()=>{
-        checkLogin()
-        console.log(state.currentUser)
+        if(checkLogin){checkLogin()}
     },[])
     return (
         <AuthGuard>

@@ -19,7 +19,7 @@ const Search: FC =()=>{
   const {styles}=useStyles();
 
   useEffect(()=>{
-    clearBook&&clearBook();
+    if(clearBook){clearBook()};
   },[])
 
   const onFinish: FormProps<IQuery>["onFinish"] = async (values:IQuery) => {

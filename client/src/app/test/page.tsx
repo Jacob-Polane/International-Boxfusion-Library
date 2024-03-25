@@ -22,12 +22,12 @@ const Test:React.FC =()=>{
         {dataState.map((d:any)=>{
             return (
                 <>
-                    {console.log(d.volumeInfo.imageLinks.thumbnail)}
+                    {/* {console.log(d.volumeInfo.imageLinks.thumbnail)}
                     {/* <Image key={d.volumeInfo.imageLinks.thumbnail} src={d.volumeInfo.imageLinks.thumbnail} alt='cover' width={100} height={200}/> */}
-                    <h1 style={{color:"red"}}>{d.volumeInfo.title}</h1>
+                    {/* <h1 style={{color:"red"}}>{d.volumeInfo.title}</h1>
                     {d.volumeInfo.categories?<h3 style={{color:'green'}}>{d.volumeInfo.categories}</h3>:<h3>Doesn't exist</h3>}
                     {d.volumeInfo.authors.map((data:string)=>(<h4>{data}</h4>))}
-                    <p style={{color:'blue'}}>{d.volumeInfo.description}</p>
+                    <p style={{color:'blue'}}>{d.volumeInfo.description}</p> */}
                 </>
             );
         })}
