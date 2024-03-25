@@ -19,11 +19,11 @@ export interface IQuery{
 
 export interface IUser {
     id?: string;
-    username: string;
+    userName: string;
     name: string;
     surname: string;
     phoneNumber: string;
-    email: string;
+    emailAddress: string;
     password: string;
     gender:number;
   }
