@@ -2,6 +2,7 @@
 using Abp.Modules;
 using Abp.Reflection.Extensions;
 using Abp.Zero.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Template.EntityFrameworkCore.Seed;
 
 namespace Template.EntityFrameworkCore
@@ -34,6 +35,7 @@ namespace Template.EntityFrameworkCore
             }
         }
 
+        
         public override void Initialize()
         {
             IocManager.RegisterAssemblyByConvention(typeof(TemplateEntityFrameworkModule).GetAssembly());
@@ -46,5 +48,6 @@ namespace Template.EntityFrameworkCore
                 SeedHelper.SeedHostDb(IocManager);
             }
         }
+
     }
 }

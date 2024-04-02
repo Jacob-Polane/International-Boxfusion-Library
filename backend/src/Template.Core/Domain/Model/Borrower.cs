@@ -9,6 +9,7 @@ namespace Template.Domain.Model
 {
     public class Borrower:Person
     {
-        
+        public virtual List<String>? InterestCategory { get; set; } // can be set initially 
+        public virtual List<String>? History { get; set; }//save memory save catelogue rather than entire book
     }
 }

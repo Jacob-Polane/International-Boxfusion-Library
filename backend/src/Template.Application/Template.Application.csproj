@@ -12,6 +12,11 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Services\PersonAppService\**" />
+    <EmbeddedResource Remove="Services\PersonAppService\**" />
+    <None Remove="Services\PersonAppService\**" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.3" />
   </ItemGroup>
@@ -19,6 +24,6 @@
     <ProjectReference Include="..\Template.Core\Template.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Services\BookAppService\" />
+    <Folder Include="Services\BorrowerAppService\Mapping\" />
   </ItemGroup>
 </Project>
