@@ -9,7 +9,7 @@ const AuthGuard : FC<PropsWithChildren>=({children})=>{
     const {logIn,checkLogin,logOutUser,getUserDetails}=useCheckAUth();
 
     useEffect(()=>{
-        checkLogin()
+        checkLogin();
     })
 
     return (

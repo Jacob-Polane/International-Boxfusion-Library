@@ -9,12 +9,15 @@ export const useStyles = createStyles(({css})=>({
 
        
         height:100vh;
+        scroll:none;
+        overflow: hidden;
     `),
     BookCard:
     css(`
         width:70%;
-        height:80%;
+        height:70%;
         border-color:#1BA1E2;
+        
     `),
     Authors:
     css(`

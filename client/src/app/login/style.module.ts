@@ -47,5 +47,7 @@ export const useStyles = createStyles(()=>({
         flex-direction:row;
         width:100%;
         align-items:center;
+        justify-content:center;
+        margin-top:-20px;
     `)
 }));

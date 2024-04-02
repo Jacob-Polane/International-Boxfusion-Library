@@ -8,20 +8,44 @@ import NavBar from '@/components/navbar/NavBar';
 import AuthGuard from '@/components/authGuard/AuthGuard';
 import { useSearchStateContext } from '@/providers/searchProvider';
 import { useRouter } from 'next/navigation';
+import { useBookRequestAction, useBookRequestState } from '@/providers/requestBookprovider';
+import { IRequest } from '@/providers/requestBookprovider/context';
+import { useLoginState } from '@/providers/authProvider';
+import {Comment,params,ViewComment} from '@/components/comments';
+import { useCommentAction } from '@/providers/commentProvider';
 
 
 const Book: FC =()=>{
     const [loading,setLoading]=useState(true);
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [isDrawerOpen,setDrawerOpen] =useState<boolean>(false);
     const {styles}=useStyles();
 
+    const status =useLoginState();
     const state=useSearchStateContext();
+    const bookRequest=useBookRequestState();
+    const {requestBook}=useBookRequestAction();
     const router=useRouter();
+    const {getComments}=useCommentAction();
+
+    const request=(id:string)=>{
+        const values:IRequest={
+            bookId:id,
+            borrowerId:status.currentUser?.id,
+            status:1
+        }
+        console.log(values)
+        requestBook&&requestBook(values);
+    }
     useEffect(()=>{
         setTimeout(()=>setLoading(false),3000);
+        console.log(bookRequest);
+        getComments&&getComments(state?.book?.id??'');
     },[])
 
     return (
         <AuthGuard>
+            
             <NavBar/>
             <div className={styles.BookContainer} >
             {state.book?<Card title={state.book?.title} bordered={true} className={styles.BookCard} hoverable loading={loading}>
@@ -43,8 +67,11 @@ const Book: FC =()=>{
                         </div>
                     </div>
                     <div key={styles.buttonSelect} className={styles.buttonSelect}>
-                        <Button style={{backgroundColor:'#1BA1E2',color:'white'}}className={styles.button}>Review Book</Button>
-                        <Button style={{backgroundColor:'green',color:'white'}} className={styles.button}>Request</Button>
+                        <Button key='review book' style={{backgroundColor:'#1BA1E2',color:'white'}}className={styles.button} onClick={()=>setIsModalOpen(true)}>Review Book</Button>
+                        <Comment setIsModalOpen={setIsModalOpen} isModalOpen={isModalOpen} id={state?.book.id}/>
+                        <Button key ='view reviews' style={{color:'#1BA1E2',backgroundColor:'white',border:'2px solid #1BA1E2'}}className={styles.button} onClick={()=>setDrawerOpen(true)}>View Reviews</Button>
+                        <ViewComment setDrawerOpen={setDrawerOpen} isDrawerOpen={isDrawerOpen} id={state?.book.id}/>
+                        <Button style={{backgroundColor:'green',color:'white'}} className={styles.button} onClick={()=>{request(state.book?.id??'')}}>Request</Button>
                     </div>
                 </Row>
                 <Row >
@@ -53,7 +80,7 @@ const Book: FC =()=>{
                         Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nulla minima ad possimus eos modi architecto! Vel aliquid repellat,
                          voluptatem soluta cum, esse rerum nisi, minus omnis eos sed. Consectetur, expedita! Lorem ipsum dolor sit amet consectetur 
                          adipisicing elit. Mollitia, error nostrum. Aliquid quasi hic distinctio. Nisi magnam aut facere reprehenderit quos explicabo
-                          nulla, distinctio exercitationem dolorum? Aliquid neque debitis totam!
+                        nulla, distinctio exercitationem dolorum? Aliquid neque debitis totam!
                     </p> 
                 </Row>
             </Card>:<>{router.push('/search')}</>}

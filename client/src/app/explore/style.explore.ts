@@ -25,5 +25,12 @@ export const useStyles = createStyles(({token,css})=>({
     css(`
         display: inline-block;
         width: 270px;
+    `),
+    cardCategory:css(`
+        width: 250px;
+        margin-left:20px;
+        height:100px;
+        background-color:lightblue;
+        text-align:center;
     `)
 }));

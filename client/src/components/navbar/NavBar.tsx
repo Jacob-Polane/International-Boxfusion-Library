@@ -1,4 +1,4 @@
-import React,{FC, useEffect} from 'react';
+import React,{FC, useEffect, useState} from 'react';
 import { Col, Row,Drawer } from 'antd';
 import {useStyles} from "./style.module";
 import Image from 'next/image';
@@ -15,9 +15,11 @@ const NavBar : FC = ()=>{
   const state=useLoginState();
   const {open,onClose,showDrawer}=useDrawer();
   const {logIn,checkLogin,logOutUser}=useCheckAUth();
+  const [isLibrarian,setIsLibrarian] = useState<boolean>(false);
   
   useEffect(()=>{
     checkLogin();
+    localStorage.getItem('isLibrarian')=='true'?setIsLibrarian(true):setIsLibrarian(false);
   })
 
   
@@ -35,7 +37,7 @@ const NavBar : FC = ()=>{
          <Image className={styles.logoImage} src={Logo} alt='logo' onClick={()=> router.push('/')}/>
         </Col>
 
-        <Col
+        {!isLibrarian?<><Col
           className={styles.nav}
           key='explore'
           xs={{ flex: '100%' }}
@@ -75,7 +77,21 @@ const NavBar : FC = ()=>{
         >
 
           About
+        </Col></>:
+          <Col
+          className={styles.nav}
+          key='about'
+          xs={{ flex: '100%' }}
+          sm={{ flex: '50%' }}
+          md={{ flex: '40%' }}
+          lg={{ flex: '20%' }}
+          xl={{ flex: '15%' }}
+          onClick={()=>router.push('/dashboard')}
+        >
+
+          Dashboard
         </Col>
+        }
         {logIn&&<Col
           className={styles.nav}
           key='logout'
@@ -94,7 +110,7 @@ const NavBar : FC = ()=>{
             <Profile/>
           </Drawer>
           :
-          logIn&&<Col className={styles.navUser} onClick={showDrawer}>{state.currentUser?.userName}</Col>
+          logIn&&<Col className={styles.navUser} onClick={showDrawer}>{state.currentUser?.username}</Col>
         }
     </Row>
     );

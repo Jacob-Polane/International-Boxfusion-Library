@@ -16,6 +16,7 @@ export const useDrawer=()=>{
 export const useCheckAUth=()=>{
     const {logOutUser,getUserDetails} =useLoginActions();
         const state=useLoginState();
+        console.log(state)
         const [logIn,setLogIn]=useState<boolean>(false);
     const checkLogin = ()=>{
         if(!state.currentUser){

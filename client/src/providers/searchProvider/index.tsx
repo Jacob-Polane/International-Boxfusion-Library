@@ -6,6 +6,7 @@ import { reducer } from './reducer';
 import { useGet, useMutate } from 'restful-react';
 import { INITIAL_STATE,searchStateContext,searchActionContext, IBookStateContext, IBookActionContext} from './context';
 import { IQuery } from '../../../models/interface';
+import instance from '..';
 
 const SearchProvider:FC<PropsWithChildren> =({children})=>{
     const [state,dispatch]=useReducer(reducer,INITIAL_STATE);
@@ -13,20 +14,12 @@ const SearchProvider:FC<PropsWithChildren> =({children})=>{
 
     const searchBook = async (payload:IQuery) =>{
         const query=new URLSearchParams({...payload})
-        const token = localStorage.getItem("token");
-
-        await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URI}services/app/Book/search?${query?.toString()}`, {
-            method: 'GET',
-            cache: "no-cache",
-            headers: {
-              "Content-Type": "application/json",
-              'Authorization': `Bearer ${token}`
-            },
-          }).then(async (res)=>{
-            const response=await res.json();
-            dispatch(searchBooks(response.result));
-            message.success('Added to cart');
-          }).catch(err=>message.error('Failed to add to cart'));             
+        await instance.get(`services/app/Book/search?${query?.toString()}`).
+                                                                            then(async (response)=>
+                                                                                {
+                                                                                  dispatch(searchBooks(response.data.result));
+                                                                                  message.success('Results laoding');
+                                                                                }).catch(err=>message.error('Result failed to load'));             
     }
 
     const clearBook=async ()=>{

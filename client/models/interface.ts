@@ -5,10 +5,12 @@ export interface IBook{
     isbn10?:string,
     isbn13?:string,
     publisher?:string,
-    publishedDate:string,
-    frequency:number,
+    publishedDate?:string,
+    frequency?:number,
     category:string,
-    number_Avaiable:number
+    number_Avaiable?:number;
+    status?:number;
+    oid?:string;
 }
 export interface IQuery{
     isbn?:string,
@@ -19,11 +21,11 @@ export interface IQuery{
 
 export interface IUser {
     id?: string;
-    userName: string;
+    username: string;
     name: string;
     surname: string;
     phoneNumber: string;
-    emailAddress: string;
+    email: string;
     password: string;
     gender:number;
   }
@@ -32,5 +34,12 @@ export interface IUser {
 export interface ILogin{
     userNameOrEmailAddress: string,
     password: string,
-    remember:boolean
+    remember:boolean,
+    isLibrarian:boolean
 }
+
+export interface CommentData{
+    message?:string;
+    rating?:number;
+}
+

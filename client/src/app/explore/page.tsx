@@ -1,12 +1,12 @@
 'use client'
-import React,{FC} from "react";
+import React,{FC, useEffect, useState} from "react";
 import NavBar from "@/components/navbar/NavBar";
-import Image from 'next/image';
+// import Image from 'next/image';
 import Book from '../../../public/book1.jpg';
 import Banner from '../../../public/banner.jpg';
 import {RightOutlined} from '@ant-design/icons'
 import HorizontalContainer from "@/components/HorizontalContainer/HorizontalContainer";
-import { Carousel,Card} from 'antd';
+import { Carousel,Card,Image} from 'antd';
 import { useStyles } from "./style.explore";
 import { useRouter } from "next/navigation";
 const {Meta} = Card;
@@ -22,69 +22,18 @@ interface Idata{
 const Explore: React.FC  = () =>{
     const {styles}=useStyles();
     const router=useRouter();
+    const [dataState,setData]=useState<any>([]);
+    
 
-    const data:Idata[]=[
-        {
-            title: 'The late night',
-            Author:'PJ Mahloko',
-            BookImgUrl:'https://www.bibalex.org/SCIplanet/Attachments/Article/MediumImage/wmCo7XflZf_20210412112248843.jpg',
-            Description:'The late night remedies of south africa'
-        },
-        {
-            title: 'The late night 2',
-            Author:'PJ Mahloko',
-            BookImgUrl:'https://www.bibalex.org/SCIplanet/Attachments/Article/MediumImage/wmCo7XflZf_20210412112248843.jpg',
-            Description:'The late night remedies of south africa'
-        },
-        {
-            title: 'The late night 3',
-            Author:'PJ Mahloko',
-            BookImgUrl:'https://www.bibalex.org/SCIplanet/Attachments/Article/MediumImage/wmCo7XflZf_20210412112248843.jpg',
-            Description:'The late night remedies of south africa'
-        },
-        {
-            title: 'The late night 4',
-            Author:'PJ Mahloko',
-            BookImgUrl:'https://www.bibalex.org/SCIplanet/Attachments/Article/MediumImage/wmCo7XflZf_20210412112248843.jpg',
-            Description:'The late night remedies of south africa'
-        },
-        {
-            title: 'The late night 5',
-            Author:'PJ Mahloko',
-            BookImgUrl:'https://www.bibalex.org/SCIplanet/Attachments/Article/MediumImage/wmCo7XflZf_20210412112248843.jpg',
-            Description:'The late night remedies of south africa'
-        },
-        {
-            title: 'The late night 6',
-            Author:'PJ Mahloko',
-            BookImgUrl:'https://www.bibalex.org/SCIplanet/Attachments/Article/MediumImage/wmCo7XflZf_20210412112248843.jpg',
-            Description:'The late night remedies of south africa'
-        },
-        {
-            title: 'The late night 7',
-            Author:'PJ Mahloko',
-            BookImgUrl:'https://www.bibalex.org/SCIplanet/Attachments/Article/MediumImage/wmCo7XflZf_20210412112248843.jpg',
-            Description:'The late night remedies of south africa'
-        },
-        {
-            title: 'The late night 8',
-            Author:'PJ Mahloko',
-            BookImgUrl:'https://www.bibalex.org/SCIplanet/Attachments/Article/MediumImage/wmCo7XflZf_20210412112248843.jpg',
-            Description:'The late night remedies of south africa'
-        },
-        {
-            title: 'The late night 9',
-            Author:'PJ Mahloko',
-            BookImgUrl:'https://www.bibalex.org/SCIplanet/Attachments/Article/MediumImage/wmCo7XflZf_20210412112248843.jpg',
-            Description:'The late night remedies of south africa'
-        },
-        {
-            title: 'The late night 10',
-            Author:'PJ Mahloko',
-            BookImgUrl:'https://www.bibalex.org/SCIplanet/Attachments/Article/MediumImage/wmCo7XflZf_20210412112248843.jpg',
-            Description:'The late night remedies of south africa'
-        },
-    ]
+    useEffect(()=>{
+
+        fetch('https://www.googleapis.com/books/v1/volumes?q=inauthor:venter').then(data=>{
+            data.json().then(datas=>setData(datas.items))
+        })
+        
+       
+    },[])
+    
     return (
         <div>
             <NavBar/>
@@ -106,15 +55,15 @@ const Explore: React.FC  = () =>{
                     Trending
                 </h1>
                 <HorizontalContainer>
-                    {data.map((data)=>{
+                    {dataState.map((data:any)=>{
                         return (
-                            <div key={styles.cardiv} className={styles.cardiv} onClick={()=>router.push('/book')}>
+                            <div key={data.volumeInfo.title} className={styles.cardiv} onClick={()=>router.push('/book')}>
                             <Card
                               hoverable
                               className={styles.card}
-                              cover={<Image alt="example" src={Book} />}
+                              cover={<Image alt="example" src={data.volumeInfo.imageLinks.thumbnail} height={200}/>}
                             >
-                              <Meta title={data.title} description={data.Description} />
+                              <Meta title={data.volumeInfo.title} description={data.volumeInfo.categories} />
                             </Card>
                             </div>
                         );
@@ -123,18 +72,18 @@ const Explore: React.FC  = () =>{
              </div>
              <div>
                 <h1 className={styles.heading}>
-                    Top 5 Genres
+                    Recommended for you
                 </h1>
                 <HorizontalContainer>
-                    {data.map((data)=>{
+                    {dataState.map((data:any)=>{
                         return (
-                            <div key={styles.cardiv} className={styles.cardiv}>
+                            <div key={data.volumeInfo.title} className={styles.cardiv} onClick={()=>router.push('/book')}>
                             <Card
                               hoverable
                               className={styles.card}
-                              cover={<Image alt="example" src={Book} />}
+                              cover={<Image alt="example" src={data.volumeInfo.imageLinks.thumbnail} height={200}/>}
                             >
-                              <Meta title={data.title} description={data.Description} />
+                              <Meta title={data.volumeInfo.title} description={data.volumeInfo.categories} />
                             </Card>
                             </div>
                         );

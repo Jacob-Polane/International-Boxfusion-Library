@@ -1,4 +1,4 @@
-import { handleAction, handleActions } from "redux-actions";
+import { handleActions } from "redux-actions";
 import { UserActionEnum } from "./actions";
 import { IUserStateContext } from "./context";
 

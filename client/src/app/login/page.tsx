@@ -1,6 +1,6 @@
 'use client'
 import React from "react";
-import {Row,Col,Form,Input,Checkbox,Button, type FormProps} from 'antd';
+import {Row,Col,Form,Input,Checkbox,Button, type FormProps,Switch} from 'antd';
 import Image from 'next/image';
 import loginImage from '../../../public/login.png';
 import { useStyles } from "./style.module";
@@ -24,14 +24,17 @@ const Login: React.FC  = () =>{
       console.log(values)
       if(login){
         login(values);
+        values.isLibrarian?localStorage.setItem('isLibrarian','true'):localStorage.setItem('isLibrarian','false')
+        
         localStorage.setItem('name', values.userNameOrEmailAddress)
       }
     }
 
     const onFinishFailed:FormProps<ILogin>["onFinishFailed"] = (error) =>{}
-
+    const [form] = Form.useForm();
     return (
         <div className={styles.container}>
+        
         <Row className={styles.content}>
             <Col className={styles.loginImageContainer} key='navkey'>
                 <Image src={loginImage} alt='logo pic'/>
@@ -40,16 +43,19 @@ const Login: React.FC  = () =>{
                     <h1 className={styles.loginFormH1}>
                         Hi,<br/>Welcome back 
                     </h1>
+
                     <Form
+                    form={form}
                     name="basic"
                     labelCol={{ span: 8 }}
                     wrapperCol={{ span: 16 }}
                     style={{ maxWidth: 600 }}
-                    initialValues={{ remember: true }}
+                    initialValues={{ isLibrarian:false,remember: true }}
                     onFinish={onFinish}
                     onFinishFailed={onFinishFailed}
                     autoComplete="off"
-  >             
+                    >     
+                           
                     <Form.Item<string>
                       label="Username"
                       name="userNameOrEmailAddress"
@@ -67,15 +73,26 @@ const Login: React.FC  = () =>{
                     </Form.Item>
 
                     <Form.Item<string>
+                      name="isLibrarian"
+                      valuePropName="checked"
+                    >
+                      <div style={{display:'flex',flexDirection:'row',alignItems:'center',width:'300px',justifyContent:'center'}}>
+                        <p>Are you a librarian</p>
+                        <Switch style={{marginLeft:20}} checkedChildren="Yes" unCheckedChildren="No" onChange={(checked) => form.setFieldsValue({ isLibrarian: checked })}/>
+                      </div>
+                    </Form.Item>
+
+                    <Form.Item<string>
                       name="remember"
                       valuePropName="checked"
                       wrapperCol={{ span: 30 }}
                     >
                       <div className={styles.RememberMeStyle}>
-                        <Checkbox checked={true}>Remember me</Checkbox>
+                        <Checkbox defaultChecked={true}>Remember me</Checkbox>
                         <p className={styles.notregistered} onClick={()=> router.push('/signup')}>Not Register?</p>
                       </div>
                     </Form.Item>
+                    
                     <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                       <Button type="primary" htmlType="submit" >
                         Submit

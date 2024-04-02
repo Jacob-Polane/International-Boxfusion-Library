@@ -7,15 +7,20 @@ import { reducer} from './reducer';
 import { INITIAL_STATE, IUserActionContext, IUserStateContext, UserActionContext, UserContext } from './context';
 import { loginUserRequestAction,logOutUserRequestAction,setCurrentUserRequestAction} from './actions';
 import { ILogin ,IUser} from '../../../models/interface';
+import axios from 'axios';
 
 const AuthProvider: FC<PropsWithChildren<{}>> = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
   const { push } = useRouter();
 
-  const { mutate: loginUserHttp } = useMutate({
-    path: `${process.env.NEXT_PUBLIC_API_BASE_URI}TokenAuth/Authenticate`,
-    verb: 'POST',
-  });
+// Create a new Axios instance with default configuration
+const instance = axios.create({
+  baseURL: `${process.env.NEXT_PUBLIC_API_BASE_URI}`,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
+  
   
   const { mutate: createUserHttp } = useMutate({
     path: `${process.env.NEXT_PUBLIC_API_BASE_URI}services/app/Borrower/Create`,
@@ -26,21 +31,25 @@ const AuthProvider: FC<PropsWithChildren<{}>> = ({ children }) => {
 
 
   const login = async (payload: ILogin) => {
-    try {
-      const response = await loginUserHttp(payload);
-      if (response.success) {
-        localStorage.setItem('token', response.result.accessToken);
-        dispatch(loginUserRequestAction(response.result));
-        await getUserDetails();
-        push("/explore");
-        message.success('Login successful');
-      } else {
-        message.error('Invalid username or password');
-      }
-    } catch (error) {
-      message.error('Login failed');
-    }
-  };
+        await instance.post('TokenAuth/Authenticate',payload).then(async (response)=>
+          {
+            console.log(response.data.result,'data')
+            localStorage.setItem('token', response.data.result.accessToken)
+            dispatch(loginUserRequestAction(response.data.result))
+            getUserDetails().then(()=>{
+                                        if(localStorage.getItem('isLibrarian')=='true'){
+                                          push('/dashboard')
+                                        }else{
+                                          push("/explore");
+                                        }
+                                        message.success('Login successful')
+                                      }).catch(error=>{
+                                                        message.error(error)
+                                                        logOutUser();
+                                                      })
+                            })
+                            .catch((response)=>message.error(response.response.data.error.message));
+  }
 
   const createUser = async (payload: IUser) => {
     try {
@@ -49,17 +58,20 @@ const AuthProvider: FC<PropsWithChildren<{}>> = ({ children }) => {
         message.success("User successfully created Login");
         push('/login');
       } else {
-        message.error("Failed to create user");
+        console.log(response)
+        message.error(response.error.message);
       }
-    } catch (error) {
-      message.error("An error occurred during user creation");
+    } catch (error:any) {
+      message.error(error?.data.error.message);
     }
   };
 
   const getUserDetails = async () => {
     const token = localStorage.getItem("token");
+    const user=localStorage.getItem("isLibrarian");
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URI}services/app/Session/GetCurrentLoginInformations`, {
+      const url=user=='false'?'services/app/Borrower/GetIdOfCurrentUser':'services/app/Librarian/GetIdOfCurrentUser';
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URI+url}`, {
         method: 'GET',
         cache: "no-cache",
         headers: {
@@ -68,15 +80,22 @@ const AuthProvider: FC<PropsWithChildren<{}>> = ({ children }) => {
         },
       });
       const data = await response.json();
-      dispatch(setCurrentUserRequestAction(data.result.user));
+      console.log(data.result,'shasha')
+      if(data.result==null){
+        throw "Select Correct User";
+      }
+      dispatch(setCurrentUserRequestAction(data.result));
+      
     } catch (error) {
-      message.error("Failed to get user details");
+      console.log(error);
+      throw error;
     }
   };
 
   const logOutUser = () => {
     dispatch(logOutUserRequestAction());
-    localStorage.removeItem('token');
+    localStorage.clear();
+    push('/login');
   };
 
   return (
