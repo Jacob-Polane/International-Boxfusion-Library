@@ -45,3 +45,7 @@ export interface CommentData{
     rating?:number;
 }
 
+// Create a file named localStorage.d.ts in your project
+
+ 
+  
