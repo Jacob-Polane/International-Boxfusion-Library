@@ -44,6 +44,10 @@ namespace Template.Services.OutbookAppService
                 var person = await _borrowerRepository.FirstOrDefaultAsync(x => x.Id == input.BorrowerId);
                 var book = await _bookRepository.FirstOrDefaultAsync(x => x.Id == input.BookId);
 
+                //update frequency
+                book.Frequency += 1;
+                book = await _bookRepository.UpdateAsync(book);
+                
                 OutbookModel.Book = book;
                 OutbookModel.Borrower = person;
 

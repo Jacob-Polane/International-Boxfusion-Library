@@ -3,6 +3,7 @@ using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.IdentityFramework;
 using Abp.Localization;
+using Abp.UI;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -145,8 +146,19 @@ namespace Template.Services.BorrowerAppService
         public async Task<InterestDto> CreateInterest(InterestDto input)
         {
             var borrower = await _BorrowerRepository.FirstOrDefaultAsync(x => x.User.Id == AbpSession.UserId);
+            foreach(var itr in input.InterestCategory)
+            {
+                if (borrower.InterestCategory.Contains(itr))
+                {
+                    
+                }
+                else
+                {
+                    borrower.InterestCategory.Add(itr);
+                }
+            }
             
-            borrower.InterestCategory.AddRange(input.InterestCategory);  
+           
 
             return ObjectMapper.Map<InterestDto>(borrower);
             
@@ -154,6 +166,7 @@ namespace Template.Services.BorrowerAppService
 
         public async Task<InterestDto> GetInterests()
         {
+            
             var borrower = await _BorrowerRepository.FirstOrDefaultAsync(x => x.User.Id == AbpSession.UserId);
 
             return ObjectMapper.Map<InterestDto>(borrower);

@@ -1603,8 +1603,14 @@ namespace Template.Migrations
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Frequency")
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Frequency")
                         .HasColumnType("int");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -1621,16 +1627,16 @@ namespace Template.Migrations
                     b.Property<long?>("LastModifierUserId")
                         .HasColumnType("bigint");
 
-                    b.Property<int>("Number_Avaliable")
+                    b.Property<int?>("Number_Avaliable")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("PublishedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Publisher")
+                    b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Title")
+                    b.Property<string>("uniqueId")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");

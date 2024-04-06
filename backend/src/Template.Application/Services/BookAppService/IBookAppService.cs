@@ -13,5 +13,7 @@ namespace Template.Services.BookAppService
     public interface IBookAppService :IApplicationService
     {
         Task<List<BookDto>> search([FromQuery] string? isbn, [FromQuery] string? author,[FromQuery]string? Category, [FromQuery]string? title);
+       Task<BookDto> GetByGoogleIdAsync(string id);
+        Task<List<BookDto>> GetTop10();
     }
 }

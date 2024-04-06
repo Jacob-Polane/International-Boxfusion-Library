@@ -14,17 +14,20 @@ using Template.Services.BookAppService.Dto;
 
 namespace Template.Services.BookAppService
 {
-    [AbpAuthorize]
+    
     public class BookAppService : AsyncCrudAppService<Book, BookDto, Guid>, IBookAppService
     {
         private readonly IRepository<Book,Guid> _repository;
+        private readonly IRepository<Borrower,Guid> _personRepository;
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="repository"></param>
-        public BookAppService(IRepository<Book, Guid> repository) : base(repository) { 
+        public BookAppService(IRepository<Book, Guid> repository,IRepository<Borrower,Guid> personRepository) : base(repository) { 
         
             this._repository=repository;
+            this._personRepository = personRepository;
         }
 
         /// <summary>
@@ -77,6 +80,42 @@ namespace Template.Services.BookAppService
             }
 
             return ObjectMapper.Map<List<BookDto>>(await query.ToListAsync());
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<BookDto> GetByGoogleIdAsync(string id)
+        {
+            var query = await this._repository.FirstOrDefaultAsync(x => x.uniqueId== id);
+            return ObjectMapper.Map<BookDto>(query);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+
+        public async Task<List<BookDto>> GetTop10()
+        {
+            var query = _repository.GetAll().OrderByDescending(x=>x.Frequency).Take(10);
+            return ObjectMapper.Map<List<BookDto>>(query);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+
+        public async Task<List<BookDto>> GetRecommendation()
+        {
+            var person = await _personRepository.FirstOrDefaultAsync(x => x.User.Id == AbpSession.UserId);
+            var query = await _repository.GetAll().Where(x => person.InterestCategory.Contains(x.Category)).Take(15).ToListAsync();
+            return ObjectMapper.Map<List<BookDto>>(query);
         }
     }
 }
