@@ -9,6 +9,9 @@ import HorizontalContainer from "@/components/HorizontalContainer/HorizontalCont
 import { Carousel,Card,Image} from 'antd';
 import { useStyles } from "./style.explore";
 import { useRouter } from "next/navigation";
+import { useSearchActionContext, useSearchStateContext } from "@/providers/searchProvider";
+import { IBook } from "../../../models/interface";
+import {isEmpty} from 'lodash';
 const {Meta} = Card;
 
 interface Idata{
@@ -23,16 +26,25 @@ const Explore: React.FC  = () =>{
     const {styles}=useStyles();
     const router=useRouter();
     const [dataState,setData]=useState<any>([]);
+    const state=useSearchStateContext();
+    const {trendingBooks,getBookTrending,getRecommended}=useSearchActionContext();
     
 
     useEffect(()=>{
-
-        fetch('https://www.googleapis.com/books/v1/volumes?q=inauthor:venter').then(data=>{
-            data.json().then(datas=>setData(datas.items))
-        })
-        
+        if(trendingBooks){trendingBooks()}
+        if(getRecommended){getRecommended()}
+         
        
     },[])
+
+    console.log(state,'HEllo state')
+    const viewBook =(id:string)=>{
+        if(getBookTrending){
+            getBookTrending(id);
+          router.push('/book');
+        }
+        
+      }
     
     return (
         <div>
@@ -55,41 +67,41 @@ const Explore: React.FC  = () =>{
                     Trending
                 </h1>
                 <HorizontalContainer>
-                    {dataState.map((data:any)=>{
+                    {state?.trending?.map((data:IBook)=>{
                         return (
-                            <div key={data.volumeInfo.title} className={styles.cardiv} onClick={()=>router.push('/book')}>
+                            <div key={data.id} className={styles.cardiv} onClick={()=>{viewBook(data.id)}}>
                             <Card
                               hoverable
                               className={styles.card}
-                              cover={<Image alt="example" src={data.volumeInfo.imageLinks.thumbnail} height={200}/>}
+                              cover={<Image alt="example" src={data.imageUrl} height={200} width={200}/>}
                             >
-                              <Meta title={data.volumeInfo.title} description={data.volumeInfo.categories} />
+                              <Meta title={data.title} description={data.author+"  Date:"+data.publishedDate} />
                             </Card>
                             </div>
                         );
                     })}
                  </HorizontalContainer>
              </div>
-             <div>
+             {!isEmpty(state?.Recommendations)&&<div>
                 <h1 className={styles.heading}>
                     Recommended for you
                 </h1>
                 <HorizontalContainer>
-                    {dataState.map((data:any)=>{
+                {state?.Recommendations?.map((data:IBook)=>{
                         return (
-                            <div key={data.volumeInfo.title} className={styles.cardiv} onClick={()=>router.push('/book')}>
+                            <div key={data.id} className={styles.cardiv} onClick={()=>{viewBook(data.id)}}>
                             <Card
                               hoverable
                               className={styles.card}
-                              cover={<Image alt="example" src={data.volumeInfo.imageLinks.thumbnail} height={200}/>}
+                              cover={<Image alt="example" src={data.imageUrl} height={200} width={200}/>}
                             >
-                              <Meta title={data.volumeInfo.title} description={data.volumeInfo.categories} />
+                              <Meta title={data.title} description={data.author+"  Date:"+data.publishedDate} />
                             </Card>
                             </div>
                         );
                     })}
                  </HorizontalContainer>
-             </div>
+             </div>}
         </div>
     );
 }

@@ -1,4 +1,4 @@
-import useDashHelper from '@/app/dashboard/helper';
+import useDashHelper from '../../../utilis/dashboard/helper';
 import { Drawer, Layout, Menu, theme } from 'antd';
 import Sider from 'antd/es/layout/Sider';
 import React, { FC, PropsWithChildren } from 'react';
@@ -24,7 +24,7 @@ const DashNav:FC<PropsWithChildren>=({children})=>{
                   console.log(collapsed, type);
                 }}
               >
-                <Menu theme="dark" mode="inline" defaultSelectedKeys={['4']} items={items} />
+                <Menu theme="dark" mode="inline" defaultSelectedKeys={['2']} items={items} />
                 <Drawer title="Profile Details" open={showProfile} onClose={()=>setShowProfile(false)}><Profile/></Drawer>
               </Sider>
             <Layout>

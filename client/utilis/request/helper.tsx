@@ -1,6 +1,6 @@
 import {Select, Table,TableColumnsType,message,Modal} from 'antd';
 import { useBookRequestAction, useBookRequestState } from '@/providers/requestBookprovider';
-import { IBook } from '../../../models/interface';
+import { IBook } from '../../models/interface';
 import { UpdateStatus } from '@/providers/requestBookprovider/context';
 
 const {Option}=Select;

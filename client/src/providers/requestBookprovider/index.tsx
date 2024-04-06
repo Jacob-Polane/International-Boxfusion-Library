@@ -5,6 +5,7 @@ import { reducer } from './reducer';
 import { message } from 'antd';
 import { requestBookAction, viewBookAction, viewRequestedBooksAction } from './action';
 import instance from '..';
+import { IBook } from '../../../models/interface';
 
 const RequestProvider:FC<PropsWithChildren> = ({children})=>{
     const [state,dispatch]=useReducer(reducer,INITIAL_STATE);
@@ -48,9 +49,13 @@ const RequestProvider:FC<PropsWithChildren> = ({children})=>{
         .catch((response)=>message.error(response.response.data.error.message)); 
     }
 
+    const createBook =async (payload:IBook)=>{
+      await instance.post('services/app/Book/Create',payload).then(data=>console.log(data)).catch((response)=>message.error(response.response.data.error.message()))
+    }
+
     return (
     <RequestContext.Provider value={getState()}>
-        <RequestActionContext.Provider value={{requestBook,viewHistory,viewAllRequest,changeBookState}}>
+        <RequestActionContext.Provider value={{requestBook,viewHistory,viewAllRequest,changeBookState,createBook}}>
         {children}
         </RequestActionContext.Provider>
     </RequestContext.Provider>);

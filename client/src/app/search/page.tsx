@@ -10,6 +10,7 @@ import { useSearchActionContext, useSearchStateContext } from '@/providers/searc
 import searchImage from '../../../public/searchImage.webp';
 import Image from 'next/image';
 import { useStyles } from './style.module';
+import { useInterestAction, useInterestState } from '@/providers/InterestProvider';
 
 const Search: FC =()=>{
 
@@ -27,6 +28,13 @@ const Search: FC =()=>{
     values.author=values.author?values.author:'';
     values.Category=values.Category?values.Category:'';
     values.title=values.title?values.title:'';
+    if(values.isbn===''&&
+      values.author===''&&
+      values.Category===''&&
+      values.title===''){
+        message.error("Please enter atleast one input")
+        return;
+      }
     if(searchBook){
       await searchBook(values);  
     }

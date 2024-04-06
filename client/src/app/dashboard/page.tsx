@@ -2,7 +2,7 @@
 import React from 'react';
 import {Col,Row} from 'antd';
 import DashNav from '@/components/dashboardNav/dashnav';
-import useDashHelper from './helper';
+import useDashHelper from '../../../utilis/dashboard/helper';
 
 const Dashboard: React.FC = () => {
     const {DashOperations}=useDashHelper();

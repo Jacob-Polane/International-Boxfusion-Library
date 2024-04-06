@@ -5,6 +5,7 @@ import AuthProvider from "@/providers/authProvider";
 import SearchProvider from "@/providers/searchProvider";
 import RequestProvider from "@/providers/requestBookprovider";
 import CommentProvider from "@/providers/commentProvider";
+import InterestsProvider from "@/providers/InterestProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,7 +25,9 @@ export default function RootLayout({
         <SearchProvider>
           <RequestProvider>
             <CommentProvider>
+              <InterestsProvider>
               <body className={inter.className}>{children}</body>
+              </InterestsProvider>
             </CommentProvider>
           </RequestProvider>
         </SearchProvider>

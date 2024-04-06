@@ -1,7 +1,7 @@
 import React,{FC, PropsWithChildren,useEffect, useState} from 'react';
 import { Button, Result } from 'antd';
 import { useRouter } from 'next/navigation';
-import { useCheckAUth } from '../navbar/helper';
+import { useCheckAUth } from '../../../utilis/navbar/helper';
 
 
 const AuthGuard : FC<PropsWithChildren>=({children})=>{

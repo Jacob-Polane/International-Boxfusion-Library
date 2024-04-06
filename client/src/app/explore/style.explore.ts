@@ -20,6 +20,9 @@ export const useStyles = createStyles(({token,css})=>({
     css(`
         width: 240px;
         margin-left:20px;
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
     `),
     cardiv:
     css(`

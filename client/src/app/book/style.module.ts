@@ -15,7 +15,6 @@ export const useStyles = createStyles(({css})=>({
     BookCard:
     css(`
         width:70%;
-        height:70%;
         border-color:#1BA1E2;
         
     `),

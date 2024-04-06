@@ -1,7 +1,7 @@
 'use client'
 import { message } from 'antd';
 import React,{FC, PropsWithChildren, useContext, useReducer, useState} from 'react';
-import {searchBooks,clearBooks,getBooks} from './action';
+import {searchBooks,clearBooks,getBooks, getTrendingBooksAction, getRecommendationAction} from './action';
 import { reducer } from './reducer';
 import { useGet, useMutate } from 'restful-react';
 import { INITIAL_STATE,searchStateContext,searchActionContext, IBookStateContext, IBookActionContext} from './context';
@@ -12,6 +12,9 @@ const SearchProvider:FC<PropsWithChildren> =({children})=>{
     const [state,dispatch]=useReducer(reducer,INITIAL_STATE);
     const getState =()=>({...state})
 
+    const trendingBooks=async ()=>{
+        await instance.get('services/app/Book/GetTop10').then((response)=>dispatch(getTrendingBooksAction(response.data.result))).catch(err=>message.error('Result failed to load'));
+    }
     const searchBook = async (payload:IQuery) =>{
         const query=new URLSearchParams({...payload})
         await instance.get(`services/app/Book/search?${query?.toString()}`).
@@ -32,10 +35,24 @@ const SearchProvider:FC<PropsWithChildren> =({children})=>{
             dispatch(getBooks(item[0]));
         }
     }
+
+    const getBookTrending=(index:string)=>{
+        console.log(index,"book id")
+        console.log(state.trending,"trending")
+        if(state.trending){
+            var item=state.trending.filter(data=>data.id==index);
+            dispatch(getBooks(item[0]));
+        }
+    }
+
+    const getRecommended=async()=>{
+        await instance.get('services/app/Book/GetRecommendation').then((response)=>dispatch(getRecommendationAction(response.data.result))).catch(err=>message.error('Result failed to load'));
+        
+    }
     return (
         <>
         <searchStateContext.Provider value={getState()}>
-            <searchActionContext.Provider value={{searchBook,clearBook,getBook}}>
+            <searchActionContext.Provider value={{searchBook,clearBook,getBook,getBookTrending,trendingBooks,getRecommended}}>
                 {children}
             </searchActionContext.Provider>
         </searchStateContext.Provider>

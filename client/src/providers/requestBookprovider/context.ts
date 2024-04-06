@@ -26,6 +26,7 @@ export interface IRequestActionContext{
     viewHistory?:()=>void; 
     viewAllRequest?:(status:string)=>void;
     changeBookState?:(status:UpdateStatus)=>void;
+    createBook?:(payload:IBook)=>void;
 }
 
 const RequestContext = createContext<IRequestStateContext>(INITIAL_STATE);

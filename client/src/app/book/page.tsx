@@ -1,8 +1,8 @@
 'use client'
 import React,{FC, useEffect, useState} from 'react';
-import { Card ,Row,Tag,Button} from 'antd'
+import { Card ,Row,Tag,Button,Image} from 'antd'
 import { useStyles } from './style.module';
-import Image from 'next/image';
+
 import book from '../../../public/book1.jpg'
 import NavBar from '@/components/navbar/NavBar';
 import AuthGuard from '@/components/authGuard/AuthGuard';
@@ -50,7 +50,7 @@ const Book: FC =()=>{
             <div className={styles.BookContainer} >
             {state.book?<Card title={state.book?.title} bordered={true} className={styles.BookCard} hoverable loading={loading}>
                 <Row >
-                    <Image style={{height:200,width:200}} src={book} alt='book cover'/>
+                    <Image  src={state.book.imageUrl} alt='book cover'/>
 
                     <div className={styles.Authors}>
                         <h3 style={{color:'gray'}}>Authors:</h3>
@@ -59,7 +59,7 @@ const Book: FC =()=>{
                                 <Tag key={data} color='cyan'> {data}</Tag>
                             ))}
                         </div>
-                        <p style={{color:'gray'}}><span style={{fontWeight:'bold',fontSize:14}}>Published date:</span> {state.book?.publishedDate}</p>
+                        <p style={{color:'gray'}}><span style={{fontWeight:'bold',fontSize:14}}>Published date:</span> {state.book?.publishedDate?.substring(0,10)}</p>
                         <div>
                             {(state.book?.category.split(','))?.map((data)=>(
                                 <Tag key={data} color='gold'> {data}</Tag>
@@ -77,10 +77,7 @@ const Book: FC =()=>{
                 <Row >
                     <h4 style={{padding:0}}>Desciption</h4>
                     <p style={{padding:0}}>
-                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nulla minima ad possimus eos modi architecto! Vel aliquid repellat,
-                         voluptatem soluta cum, esse rerum nisi, minus omnis eos sed. Consectetur, expedita! Lorem ipsum dolor sit amet consectetur 
-                         adipisicing elit. Mollitia, error nostrum. Aliquid quasi hic distinctio. Nisi magnam aut facere reprehenderit quos explicabo
-                        nulla, distinctio exercitationem dolorum? Aliquid neque debitis totam!
+                        {state.book.description}
                     </p> 
                 </Row>
             </Card>:<>{router.push('/search')}</>}

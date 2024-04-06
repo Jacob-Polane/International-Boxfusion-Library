@@ -11,6 +11,8 @@ export interface IBook{
     number_Avaiable?:number;
     status?:number;
     oid?:string;
+    imageUrl?:string;
+    description?:string;
 }
 export interface IQuery{
     isbn?:string,

@@ -4,9 +4,10 @@ import {useStyles} from "./style.module";
 import Image from 'next/image';
 import Logo from '../../../public/Logo.jpg'
 import { useRouter } from 'next/navigation';
-import { useDrawer,useCheckAUth } from './helper';
+import { useDrawer,useCheckAUth } from '../../../utilis/navbar/helper';
 import Profile from '../profile/Profile';
 import { useLoginState } from '@/providers/authProvider';
+import { useInterestAction } from '@/providers/InterestProvider';
 
 const NavBar : FC = ()=>{
 
@@ -16,11 +17,13 @@ const NavBar : FC = ()=>{
   const {open,onClose,showDrawer}=useDrawer();
   const {logIn,checkLogin,logOutUser}=useCheckAUth();
   const [isLibrarian,setIsLibrarian] = useState<boolean>(false);
-  
+  const action=useInterestAction();
+
   useEffect(()=>{
     checkLogin();
     localStorage.getItem('isLibrarian')=='true'?setIsLibrarian(true):setIsLibrarian(false);
-  })
+    if(action.getInterests){action.getInterests()};
+  },[])
 
   
     return (

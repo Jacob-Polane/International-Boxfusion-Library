@@ -6,7 +6,7 @@ import styles from "./page.module.css";
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import NavBar from '@/components/navbar/NavBar';
-import { useCheckAUth } from '@/components/navbar/helper';
+import { useCheckAUth } from '../../utilis/navbar/helper';
 
 export default function Home() {
   //useState

@@ -12,6 +12,7 @@ export const useStyles=createStyles({
     cardStyle:css(`
         width:100%;
         border:1px solid #1BA1E2;
-        margin-top:30px
+        margin-top:30px;
+        height:360px;
     `)
 })
