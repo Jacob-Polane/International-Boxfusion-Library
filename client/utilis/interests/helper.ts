@@ -1,8 +1,8 @@
-import React, { FC,useEffect, useRef, useState } from 'react';
-import { PlusOutlined } from '@ant-design/icons';
+import React, {  useRef, useState } from 'react';
+
 import type { InputRef, SelectProps } from 'antd';
-import { Input, Tag, theme } from 'antd';
-import { useInterestState } from '@/providers/InterestProvider';
+import { theme } from 'antd';
+
 
 export const useInterestHelper =()=>{
 
@@ -14,7 +14,6 @@ export const useInterestHelper =()=>{
 
     const handleClose = (removedTag: string) => {
         const newTags = tags.filter((tag) => tag !== removedTag);
-        console.log(newTags);
         setTags(newTags);
       };
     

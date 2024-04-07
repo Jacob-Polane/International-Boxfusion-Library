@@ -6,12 +6,13 @@ import { reducer } from './reducer';
 import { useGet, useMutate } from 'restful-react';
 import { INITIAL_STATE,searchStateContext,searchActionContext, IBookStateContext, IBookActionContext} from './context';
 import { IQuery } from '../../../models/interface';
-import instance from '..';
+import useAxios from '..';
+
 
 const SearchProvider:FC<PropsWithChildren> =({children})=>{
     const [state,dispatch]=useReducer(reducer,INITIAL_STATE);
     const getState =()=>({...state})
-
+    const {instance}=useAxios();
     const trendingBooks=async ()=>{
         await instance.get('services/app/Book/GetTop10').then((response)=>dispatch(getTrendingBooksAction(response.data.result))).catch(err=>message.error('Result failed to load'));
     }
@@ -37,8 +38,6 @@ const SearchProvider:FC<PropsWithChildren> =({children})=>{
     }
 
     const getBookTrending=(index:string)=>{
-        console.log(index,"book id")
-        console.log(state.trending,"trending")
         if(state.trending){
             var item=state.trending.filter(data=>data.id==index);
             dispatch(getBooks(item[0]));

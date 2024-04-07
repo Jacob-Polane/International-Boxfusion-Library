@@ -8,10 +8,15 @@ import { INITIAL_STATE, IUserActionContext, IUserStateContext, UserActionContext
 import { loginUserRequestAction,logOutUserRequestAction,setCurrentUserRequestAction} from './actions';
 import { ILogin ,IUser} from '../../../models/interface';
 import axios from 'axios';
+import { useLocalStorage } from '@/hooks';
+
 
 const AuthProvider: FC<PropsWithChildren<{}>> = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
   const { push } = useRouter();
+  const [local,setlocal]=useLocalStorage("token","");
+  const[role,setRole]=useLocalStorage("isLibrarian","");
+  
 
 // Create a new Axios instance with default configuration
 const instance = axios.create({
@@ -33,15 +38,19 @@ const instance = axios.create({
   const login = async (payload: ILogin) => {
         await instance.post('TokenAuth/Authenticate',payload).then(async (response)=>
           {
-            console.log(response.data.result,'data')
-            localStorage.setItem('token', response.data.result.accessToken)
+            
+            setlocal&&setlocal(response.data.result.accessToken);
+            console.log(local,"dfghjk")
+            debugger;
             dispatch(loginUserRequestAction(response.data.result))
             getUserDetails().then(()=>{
-                                        if(localStorage.getItem('isLibrarian')=='true'){
+              
+                                        if(role=='true'){
                                           push('/dashboard')
                                         }else{
                                           push("/explore");
                                         }
+                                      
                                         message.success('Login successful')
                                       }).catch(error=>{
                                                         message.error(error)
@@ -58,7 +67,6 @@ const instance = axios.create({
         message.success("User successfully created Login");
         push('/login');
       } else {
-        console.log(response)
         message.error(response.error.message);
       }
     } catch (error:any) {
@@ -67,20 +75,20 @@ const instance = axios.create({
   };
 
   const getUserDetails = async () => {
-    const token = localStorage.getItem("token");
-    const user=localStorage.getItem("isLibrarian");
     try {
-      const url=user=='false'?'services/app/Borrower/GetIdOfCurrentUser':'services/app/Librarian/GetIdOfCurrentUser';
+      const url=role==='false'?'services/app/Borrower/GetIdOfCurrentUser':'services/app/Librarian/GetIdOfCurrentUser';
+      console.log(local,"toeky")
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URI+url}`, {
         method: 'GET',
         cache: "no-cache",
         headers: {
           "Content-Type": "application/json",
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${local}`
         },
       });
+  
       const data = await response.json();
-      console.log(data.result,'shasha')
+      console.log(data)
       if(data.result==null){
         throw "Select Correct User";
       }
@@ -94,7 +102,7 @@ const instance = axios.create({
 
   const logOutUser = () => {
     dispatch(logOutUserRequestAction());
-    localStorage.clear();
+    setlocal("");
     push('/login');
   };
 

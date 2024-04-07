@@ -1,5 +1,5 @@
-import {Select, Table,TableColumnsType,message,Modal} from 'antd';
-import { useBookRequestAction, useBookRequestState } from '@/providers/requestBookprovider';
+import {Select,TableColumnsType,Modal} from 'antd';
+import { useBookRequestAction } from '@/providers/requestBookprovider';
 import { IBook } from '../../models/interface';
 import { UpdateStatus } from '@/providers/requestBookprovider/context';
 
@@ -64,7 +64,6 @@ const useReqHelper=()=>{
 
     function handleStatusChange(value: number, record: IBook) {
         // Handle the status change here, you might dispatch an action if using Redux or update the state
-        console.log(`Book ID ${record.oid} - Status changed to ${value}`);
         var status:UpdateStatus={id:record.oid,status:value}
         if(changeBookState){changeBookState(status)}
     }

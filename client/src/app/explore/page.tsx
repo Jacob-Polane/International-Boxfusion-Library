@@ -14,18 +14,11 @@ import { IBook } from "../../../models/interface";
 import {isEmpty} from 'lodash';
 const {Meta} = Card;
 
-interface Idata{
-    title: string,
-    Author:string,
-    BookImgUrl:string,
-    Description:string
-}
 
 
 const Explore: React.FC  = () =>{
     const {styles}=useStyles();
     const router=useRouter();
-    const [dataState,setData]=useState<any>([]);
     const state=useSearchStateContext();
     const {trendingBooks,getBookTrending,getRecommended}=useSearchActionContext();
     
@@ -33,8 +26,6 @@ const Explore: React.FC  = () =>{
     useEffect(()=>{
         if(trendingBooks){trendingBooks()}
         if(getRecommended){getRecommended()}
-         
-       
     },[])
 
     console.log(state,'HEllo state')

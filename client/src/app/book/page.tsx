@@ -2,8 +2,6 @@
 import React,{FC, useEffect, useState} from 'react';
 import { Card ,Row,Tag,Button,Image} from 'antd'
 import { useStyles } from './style.module';
-
-import book from '../../../public/book1.jpg'
 import NavBar from '@/components/navbar/NavBar';
 import AuthGuard from '@/components/authGuard/AuthGuard';
 import { useSearchStateContext } from '@/providers/searchProvider';
@@ -11,7 +9,7 @@ import { useRouter } from 'next/navigation';
 import { useBookRequestAction, useBookRequestState } from '@/providers/requestBookprovider';
 import { IRequest } from '@/providers/requestBookprovider/context';
 import { useLoginState } from '@/providers/authProvider';
-import {Comment,params,ViewComment} from '@/components/comments';
+import {Comment,ViewComment} from '@/components/comments';
 import { useCommentAction } from '@/providers/commentProvider';
 
 
