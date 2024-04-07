@@ -12,12 +12,12 @@ import { useBookRequest, useBookRequestAction, useBookRequestState } from '@/pro
 import { useInterestState } from '@/providers/InterestProvider';
 import useProfileHelper from '../../../utilis/profile/helper';
 import Interests from '../interests';
-import { useLocalStorage } from '@/hooks';
+import  useLocalStorage  from '@/hooks';
 
 
 const Profile:FC =()=>{
     const [isLibrarian,setIsLibrarian] = useState<boolean>(false);
-    const [role,setRole]=useLocalStorage("isLibrarian","")
+    const {storedValue:role,setValue:setRole}=useLocalStorage("isLibrarian","")
     const router=useRouter();
     
     const {styles} =useStyles();

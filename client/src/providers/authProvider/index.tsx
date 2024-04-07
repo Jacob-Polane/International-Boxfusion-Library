@@ -8,14 +8,14 @@ import { INITIAL_STATE, IUserActionContext, IUserStateContext, UserActionContext
 import { loginUserRequestAction,logOutUserRequestAction,setCurrentUserRequestAction} from './actions';
 import { ILogin ,IUser} from '../../../models/interface';
 import axios from 'axios';
-import { useLocalStorage } from '@/hooks';
+import useLocalStorage  from '@/hooks';
 
 
 const AuthProvider: FC<PropsWithChildren<{}>> = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
   const { push } = useRouter();
-  const [local,setlocal]=useLocalStorage("token","");
-  const[role,setRole]=useLocalStorage("isLibrarian","");
+  const {storedValue:local,setValue:setlocal,clear}=useLocalStorage("token","");
+  const{storedValue:role,setValue:setRole}=useLocalStorage("isLibrarian","");
   
 
 // Create a new Axios instance with default configuration
@@ -39,9 +39,9 @@ const instance = axios.create({
         await instance.post('TokenAuth/Authenticate',payload).then(async (response)=>
           {
             
-            setlocal&&setlocal(response.data.result.accessToken);
+            setlocal(response.data.result.accessToken);
             console.log(local,"dfghjk")
-            debugger;
+            
             dispatch(loginUserRequestAction(response.data.result))
             getUserDetails().then(()=>{
               
@@ -88,7 +88,7 @@ const instance = axios.create({
       });
   
       const data = await response.json();
-      console.log(data)
+      console.log(data,"data")
       if(data.result==null){
         throw "Select Correct User";
       }
@@ -102,7 +102,7 @@ const instance = axios.create({
 
   const logOutUser = () => {
     dispatch(logOutUserRequestAction());
-    setlocal("");
+    clear();
     push('/login');
   };
 

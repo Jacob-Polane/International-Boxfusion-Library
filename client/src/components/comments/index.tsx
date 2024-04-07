@@ -2,7 +2,7 @@
 import React, { PropsWithChildren, ReactNode, useEffect, useState } from 'react';
 import { Button, Drawer, Flex, Form, FormProps, Modal, Rate,Card } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
-import { CommentData } from '../../../models/interface';
+import { ICommentData } from '../../../models/interface';
 import { useCommentAction, useCommentState } from '@/providers/commentProvider';
 
 export interface params{
@@ -24,7 +24,7 @@ export const Comment: React.FC<params> = ({ setIsModalOpen, isModalOpen, childre
     const {createComment}=useCommentAction();
     const [form]=Form.useForm();
     
-    const onFinish: FormProps<CommentData>["onFinish"] = (values) => {
+    const onFinish: FormProps<ICommentData>["onFinish"] = (values) => {
         
         values.rating=values.rating==undefined?0:values.rating;
         console.log('Success:', values);
@@ -33,7 +33,7 @@ export const Comment: React.FC<params> = ({ setIsModalOpen, isModalOpen, childre
         if(setIsModalOpen)setIsModalOpen(false);
       };
 
-      const onFinishFailed: FormProps<CommentData>["onFinishFailed"] = (errorInfo) => {
+      const onFinishFailed: FormProps<ICommentData>["onFinishFailed"] = (errorInfo) => {
         console.log('Failed:', errorInfo);
       };
   return (

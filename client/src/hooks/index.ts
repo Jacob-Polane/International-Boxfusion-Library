@@ -1,24 +1,42 @@
-// 
-
-import { useState, useEffect } from "react";
-
-function getStorageValue(key:string, defaultValue:string) {
-  // getting stored value
-  if (typeof window !== 'undefined') {
-const saved = localStorage.getItem(key);
-return saved || defaultValue;
-  }
-}
-
-export const useLocalStorage = (key:string, defaultValue:string) => {
-  const [value, setValue] = useState<any>(() => {
-  return getStorageValue(key, defaultValue);
+import { useState, useEffect } from 'react';
+import { ILocalStorage } from '../../models/interface';
+declare var localStorage:ILocalStorage;
+function useLocalStorage(key:string, initialValue:string) {
+  // State to store our value
+  // Pass initial state function to useState so logic is only executed once
+  const [storedValue, setStoredValue] = useState<string>(() => {
+    try {
+      // Get from local storage by key
+      
+      const item = localStorage.getItem(key);
+      // Parse stored json or if none return initialValue
+      return item ? (item) : initialValue;
+    } catch (error) {
+      // If error also return initialValue
+      console.log(error);
+      return initialValue;
+    }
   });
-
+ 
+  // Return a wrapped version of useState's setter function that ...
+  // ... persists the new value to localStorage.
+  const setValue = (value:string) => {
+      setStoredValue(value);
+      // Save to local storage
+      
+      localStorage.setItem(key, (value));
+  };
+ 
+  const clear =()=>{
+   
+    localStorage.clear()
+  };
   useEffect(() => {
-// storing input name
-  localStorage.setItem(key, value?value:value);
-  }, [key, value]);
-
-  return [value, setValue];
-};
+    
+    localStorage.setItem(key, (storedValue));
+  }, [key, storedValue]);
+ 
+  return {storedValue, setValue,clear};
+}
+ 
+export default useLocalStorage;

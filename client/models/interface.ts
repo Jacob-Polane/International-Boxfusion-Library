@@ -40,12 +40,20 @@ export interface ILogin{
     isLibrarian:boolean
 }
 
-export interface CommentData{
+export interface ICommentData{
     message?:string;
     rating?:number;
 }
 
 // Create a file named localStorage.d.ts in your project
 
- 
+export interface ILocalStorage {
+    getItem(key: string): string | null;
+    setItem(key: string, value: string): void;
+    removeItem(key: string): void;
+    clear(): void;
+  }
   
+  export interface IWindow{
+    localStorage?:ILocalStorage
+  }

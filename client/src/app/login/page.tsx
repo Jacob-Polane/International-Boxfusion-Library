@@ -6,17 +6,16 @@ import loginImage from '../../../public/login.png';
 import { useStyles } from "./style.module";
 import { useRouter } from 'next/navigation';
 import { ILogin} from "../../../models/interface";
-import { useLoginActions,useLoginState } from "@/providers/authProvider";
-import { useLocalStorage } from "@/hooks";
+import { useLoginActions} from "@/providers/authProvider";
+import  useLocalStorage  from "@/hooks";
 
 
 const Login: React.FC  = () =>{
 
     //auth
     const {login} = useLoginActions();
-    const state =useLoginState();
-    const[role,setRole]=useLocalStorage("isLibrarian","");
-    const [name,setName]=useLocalStorage("name","");
+    const{setValue:setRole}=useLocalStorage("isLibrarian","");
+    const {setValue:setName}=useLocalStorage("name","");
     //styles
     const {styles}=useStyles();
     //router

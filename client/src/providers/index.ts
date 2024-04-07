@@ -1,11 +1,11 @@
 import React,{FC, PropsWithChildren} from 'react';
 import axios from 'axios';
-import { useLocalStorage } from '@/hooks';
+import useLocalStorage  from '@/hooks';
 
 
 // Create a new Axios instance with default configuration
 const useAxios=()=>{
-  const [local,setLocal]=useLocalStorage("token","");
+  const {storedValue:local,setValue:setLocal}=useLocalStorage("token","");
   const instance = axios.create({
     baseURL: `${process.env.NEXT_PUBLIC_API_BASE_URI}`,
     headers: {
