@@ -2,7 +2,7 @@
 import React,{FC, PropsWithChildren, useContext, useReducer} from 'react';
 import { InterestActtionContext, InterestStateContext } from './context';
 import { reducer } from './reducer';
-import { getInterestAction } from './action';
+import { clearRequestAction, getInterestAction } from './action';
 import { useSearchActionContext } from '../searchProvider';
 import useAxios from '..';
 
@@ -26,9 +26,13 @@ const InterestsProvider:FC<PropsWithChildren>=({children})=>{
         }).then(error=>console.log(error));
     }
 
+    const clearRequest=()=>{
+        dispath(clearRequestAction({}))
+    }
+
     return (
         <InterestStateContext.Provider value={{...state}}>
-            <InterestActtionContext.Provider value={{getInterests,saveInterests}}>
+            <InterestActtionContext.Provider value={{getInterests,saveInterests,clearRequest}}>
                 {children}
             </InterestActtionContext.Provider>
         </InterestStateContext.Provider>

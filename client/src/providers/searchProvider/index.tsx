@@ -21,8 +21,14 @@ const SearchProvider:FC<PropsWithChildren> =({children})=>{
         await instance.get(`services/app/Book/search?${query?.toString()}`).
                                                                             then(async (response)=>
                                                                                 {
+
                                                                                   dispatch(searchBooks(response.data.result));
-                                                                                  message.success('Results laoding');
+                                                                                  if(response.data.result=[]){
+                                                                                    message.warning('No books found');
+                                                                                  }else{
+                                                                                    message.success('loading books');
+                                                                                  }
+                                                                                  
                                                                                 }).catch(err=>message.error('Result failed to load'));             
     }
 

@@ -41,9 +41,8 @@ const Book: FC =()=>{
     }
   
 
-    if(!state?.book?.id){
+    if(!state.book&&state?.book?.id){
         router.push('/search')
-
         return ;
     }
     return (
@@ -51,9 +50,9 @@ const Book: FC =()=>{
             
             <NavBar/>
             <div className={styles.BookContainer} >
-            {state?.book && <Card title={state.book?.title} bordered={true} className={styles.BookCard} hoverable loading={loading}>
+            {state.book?<Card title={state.book?.title} bordered={true} className={styles.BookCard} hoverable loading={loading}>
                 <Row >
-                    <Image  src={state?.book.imageUrl} alt='book cover'/>
+                    <Image  src={state.book.imageUrl&&state?.book.imageUrl} alt='book cover'/>
 
                     <div className={styles.Authors}>
                         <h3 style={{color:'gray'}}>Authors:</h3>
@@ -83,7 +82,8 @@ const Book: FC =()=>{
                         {state.book.description}
                     </p> 
                 </Row>
-            </Card>}
+            </Card>:<>{router.push('search')}</>
+            }
             </div>
         </AuthGuard>
     );

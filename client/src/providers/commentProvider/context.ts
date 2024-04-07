@@ -7,8 +7,9 @@ export interface ICommentState{
 }
 
 export interface ICommentionActionState{
-    getComments:(id:string)=>void;
-    createComment:(payload:ICommentData,id:string)=>void;
+    getComments?:(id:string)=>void;
+    createComment?:(payload:ICommentData,id:string)=>void;
+    clearComments?:()=>void;
 }
 
 export const CommentState=createContext<ICommentState>({});

@@ -3,7 +3,7 @@ import React ,{ FC,PropsWithChildren, useContext, useReducer} from 'react';
 import { INITIAL_STATE, IRequest, RequestActionContext, RequestContext, UpdateStatus } from './context';
 import { reducer } from './reducer';
 import { message } from 'antd';
-import { requestBookAction, viewBookAction, viewRequestedBooksAction } from './action';
+import { clearRequestAction, requestBookAction, viewBookAction, viewRequestedBooksAction } from './action';
 import { IBook } from '../../../models/interface';
 import useAxios from '..';
 
@@ -50,9 +50,12 @@ const RequestProvider:FC<PropsWithChildren> = ({children})=>{
       await instance.post('services/app/Book/Create',payload).then(data=>console.log(data)).catch((response)=>message.error(response.response.data.error.message()))
     }
 
+    const clearRequest=()=>{
+      dispatch(clearRequestAction({}))
+    }
     return (
     <RequestContext.Provider value={getState()}>
-        <RequestActionContext.Provider value={{requestBook,viewHistory,viewAllRequest,changeBookState,createBook}}>
+        <RequestActionContext.Provider value={{requestBook,viewHistory,viewAllRequest,changeBookState,createBook,clearRequest}}>
         {children}
         </RequestActionContext.Provider>
     </RequestContext.Provider>);

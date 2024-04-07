@@ -1,5 +1,5 @@
 'use client'
-import React, { createContext, FC, PropsWithChildren, useContext, useEffect, useReducer } from 'react';
+import React, { FC, PropsWithChildren, useContext, useReducer } from 'react';
 import { message } from 'antd';
 import { useMutate } from 'restful-react';
 import { useRouter } from 'next/navigation';
@@ -11,6 +11,8 @@ import axios from 'axios';
 import { useLocalStorage } from 'react-use';
 import { delay } from 'lodash';
 import useAxios from '..';
+import { useSearchActionContext } from '../searchProvider';
+import { useInterestAction } from '../InterestProvider';
 
 
 const AuthProvider: FC<PropsWithChildren<{}>> = ({ children }) => {
@@ -20,21 +22,14 @@ const AuthProvider: FC<PropsWithChildren<{}>> = ({ children }) => {
   const[role]=useLocalStorage("isLibrarian");
   const {instance}=useAxios();
 
-// Create a new Axios instance with default configuration
-// const instance = axios.create({
-//   baseURL: `${process.env.NEXT_PUBLIC_API_BASE_URI}`,
-//   headers: {
-//     'Content-Type': 'application/json',
-//   }
-// });
+  const {trendingBooks,getBookTrending,getRecommended}=useSearchActionContext();
+  const {getInterests}=useInterestAction();
   
-  
+
   const { mutate: createUserHttp } = useMutate({
     path: `${process.env.NEXT_PUBLIC_API_BASE_URI}services/app/Borrower/Create`,
     verb: 'POST',
   });
-
-
 
 
   const login = async (payload: ILogin) => {
@@ -54,6 +49,9 @@ const AuthProvider: FC<PropsWithChildren<{}>> = ({ children }) => {
                                         }
                                       
                                         message.success('Login successful')
+                                        if(trendingBooks){trendingBooks()}
+                                        if(getRecommended){getRecommended()}
+                                        if(getInterests){getInterests()}
                                       }).catch(error=>{
                                                         message.error(error)
                                                         logOutUser();
@@ -117,13 +115,14 @@ const AuthProvider: FC<PropsWithChildren<{}>> = ({ children }) => {
 
   const logOutUser = () => {
     dispatch(logOutUserRequestAction());
-    setlocal('');
+    localStorage.clear()
     push('/login');
   };
 
   return (
     <UserContext.Provider value={{...state}}>
       <UserActionContext.Provider value={{ login, createUser, logOutUser, getUserDetails }}>
+        
         {children}
       </UserActionContext.Provider>
     </UserContext.Provider>

@@ -28,7 +28,6 @@ const Explore: React.FC  = () =>{
         if(getRecommended){getRecommended()}
     },[])
 
-    console.log(state,'HEllo state')
     const viewBook =(id:string)=>{
         if(getBookTrending){
             getBookTrending(id);

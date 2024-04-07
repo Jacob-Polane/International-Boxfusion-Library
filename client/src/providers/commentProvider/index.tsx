@@ -2,7 +2,7 @@
 import React,{FC, PropsWithChildren, useContext, useReducer} from 'react';
 import { CommentActionState, CommentState, ICommentState, ICommentionActionState } from './context';
 import { reducer } from './reducer';
-import { CommentAction, GetComments } from './action';
+import { ClearComment, CommentAction, GetComments } from './action';
 import { ICommentData } from '../../../models/interface';
 import useAxios from '..';
 
@@ -18,10 +18,14 @@ const CommentProvider:React.FC<PropsWithChildren>=({children})=>{
         await instance.get(`services/app/Comment/GetAll/${id}`).then(response=>{
            dispatch(GetComments(response.data.result));
     }).catch(err=>console.log(err))
-}
+    }
+
+    const clearComments=()=>{
+        dispatch(ClearComment({}))
+    }
     return(
         <CommentState.Provider value={{...state}}>
-            <CommentActionState.Provider value={{getComments,createComment}}>
+            <CommentActionState.Provider value={{getComments,createComment,clearComments}}>
                 {children}
             </CommentActionState.Provider>
         </CommentState.Provider>

@@ -1,7 +1,7 @@
 'use client'
 import React,{FC,useState,useEffect}from 'react';
 import { useRouter } from 'next/navigation';
-import {Form,type FormProps,Button,Input,List,message,Avatar} from 'antd';
+import {Form,type FormProps,Button,Input,List,message,Avatar, Spin} from 'antd';
 import VirtualList from 'rc-virtual-list';
 import NavBar from '@/components/navbar/NavBar';
 import AuthGuard from '@/components/authGuard/AuthGuard';
@@ -10,7 +10,7 @@ import { useSearchActionContext, useSearchStateContext } from '@/providers/searc
 import searchImage from '../../../public/searchImage.webp';
 import Image from 'next/image';
 import { useStyles } from './style.module';
-import { useInterestAction, useInterestState } from '@/providers/InterestProvider';
+import { isEmpty } from 'lodash';
 
 const Search: FC =()=>{
 
@@ -18,12 +18,16 @@ const Search: FC =()=>{
   const {searchBook,clearBook,getBook}=useSearchActionContext();
   const router=useRouter();
   const {styles}=useStyles();
+ 
 
   useEffect(()=>{
     if(clearBook){clearBook()};
+  
   },[])
 
   const onFinish: FormProps<IQuery>["onFinish"] = async (values:IQuery) => {
+    if(clearBook){clearBook()};
+
     values.isbn=values.isbn?values.isbn:'';
     values.author=values.author?values.author:'';
     values.Category=values.Category?values.Category:'';
@@ -58,6 +62,7 @@ const Search: FC =()=>{
   return(
   <AuthGuard>
       <div >
+      
          <NavBar/>
           <Form layout='inline'  className={styles.FormStyle} onFinish={onFinish}>
              <Form.Item <IQuery> label="ISBN" name="isbn">
@@ -76,8 +81,11 @@ const Search: FC =()=>{
               <Button type="primary" htmlType='submit'>Search</Button>
             </Form.Item>
           </Form>
-          {(!status.books)?
-          <Image  src={searchImage} alt='image' width={500} height={400} style={{marginTop:100,marginLeft:400}}></Image>         
+          {(isEmpty(status.books))?
+          <>
+            <Image  src={searchImage} alt='image' width={500} height={400} style={{marginTop:100,marginLeft:400}}></Image> 
+          </>
+                  
           :<List style={{width:'100%',alignItems:'center',padding:20,display:'flex',justifyContent:'center',fontSize:20}}>
             <h1 style={{color:'#1BA1E2'}}>Results:</h1>
             <VirtualList
