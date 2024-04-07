@@ -8,7 +8,7 @@ import { useDrawer,useCheckAUth } from '../../../utilis/navbar/helper';
 import Profile from '../profile/Profile';
 import { useLoginState } from '@/providers/authProvider';
 import { useInterestAction } from '@/providers/InterestProvider';
-import  useLocalStorage  from '@/hooks';
+import { useLocalStorage } from 'react-use';
 
 
 const NavBar : FC = ()=>{
@@ -20,7 +20,7 @@ const NavBar : FC = ()=>{
   const {logIn,checkLogin,logOutUser}=useCheckAUth();
   const [isLibrarian,setIsLibrarian] = useState<boolean>(false);
   const action=useInterestAction();
-  const {storedValue:role,setValue:setRole}=useLocalStorage("isLibrarian","");
+  const [role]=useLocalStorage("isLibrarian","");
   useEffect(()=>{
     checkLogin();
     role=='true'?setIsLibrarian(true):setIsLibrarian(false);

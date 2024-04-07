@@ -1,13 +1,11 @@
 ﻿using Abp.Application.Services;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Template.Domain.Model;
 using Template.Services.BookAppService.Dto;

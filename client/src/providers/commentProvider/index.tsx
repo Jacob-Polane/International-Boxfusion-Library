@@ -2,7 +2,6 @@
 import React,{FC, PropsWithChildren, useContext, useReducer} from 'react';
 import { CommentActionState, CommentState, ICommentState, ICommentionActionState } from './context';
 import { reducer } from './reducer';
-import instance from '..';
 import { CommentAction, GetComments } from './action';
 import { ICommentData } from '../../../models/interface';
 import useAxios from '..';

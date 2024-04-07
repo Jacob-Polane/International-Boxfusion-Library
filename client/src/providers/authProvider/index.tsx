@@ -1,30 +1,32 @@
 'use client'
 import React, { createContext, FC, PropsWithChildren, useContext, useEffect, useReducer } from 'react';
 import { message } from 'antd';
-import { useGet, useMutate } from 'restful-react';
+import { useMutate } from 'restful-react';
 import { useRouter } from 'next/navigation';
 import { reducer} from './reducer';
 import { INITIAL_STATE, IUserActionContext, IUserStateContext, UserActionContext, UserContext } from './context';
 import { loginUserRequestAction,logOutUserRequestAction,setCurrentUserRequestAction} from './actions';
 import { ILogin ,IUser} from '../../../models/interface';
 import axios from 'axios';
-import useLocalStorage  from '@/hooks';
+import { useLocalStorage } from 'react-use';
+import { delay } from 'lodash';
+import useAxios from '..';
 
 
 const AuthProvider: FC<PropsWithChildren<{}>> = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
   const { push } = useRouter();
-  const {storedValue:local,setValue:setlocal,clear}=useLocalStorage("token","");
-  const{storedValue:role,setValue:setRole}=useLocalStorage("isLibrarian","");
-  
+  const [local,setlocal]=useLocalStorage("token");
+  const[role]=useLocalStorage("isLibrarian");
+  const {instance}=useAxios();
 
 // Create a new Axios instance with default configuration
-const instance = axios.create({
-  baseURL: `${process.env.NEXT_PUBLIC_API_BASE_URI}`,
-  headers: {
-    'Content-Type': 'application/json'
-  }
-});
+// const instance = axios.create({
+//   baseURL: `${process.env.NEXT_PUBLIC_API_BASE_URI}`,
+//   headers: {
+//     'Content-Type': 'application/json',
+//   }
+// });
   
   
   const { mutate: createUserHttp } = useMutate({
@@ -40,10 +42,10 @@ const instance = axios.create({
           {
             
             setlocal(response.data.result.accessToken);
-            console.log(local,"dfghjk")
-            
+            console.log(response.data.result.accessToken,'token')
+            delay(()=>(console.log("hello")),1000)
             dispatch(loginUserRequestAction(response.data.result))
-            getUserDetails().then(()=>{
+            await getUserDetails(response.data.result.accessToken).then(()=>{
               
                                         if(role=='true'){
                                           push('/dashboard')
@@ -74,35 +76,48 @@ const instance = axios.create({
     }
   };
 
-  const getUserDetails = async () => {
-    try {
+  const getUserDetails = async (token?:any) => {
+    
       const url=role==='false'?'services/app/Borrower/GetIdOfCurrentUser':'services/app/Librarian/GetIdOfCurrentUser';
       console.log(local,"toeky")
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URI+url}`, {
-        method: 'GET',
-        cache: "no-cache",
-        headers: {
-          "Content-Type": "application/json",
-          'Authorization': `Bearer ${local}`
-        },
-      });
-  
-      const data = await response.json();
-      console.log(data,"data")
-      if(data.result==null){
+      if(!token){
+      await instance.get(`${process.env.NEXT_PUBLIC_API_BASE_URI+url}`).then(response=>{
+      if(response.data.result==null){
         throw "Select Correct User";
       }
-      dispatch(setCurrentUserRequestAction(data.result));
-      
-    } catch (error) {
+      dispatch(setCurrentUserRequestAction(response.data.result));
+    })
+    .catch( (error) =>{
       console.log(error);
       throw error;
+    })}else{
+      await instance.get(`${process.env.NEXT_PUBLIC_API_BASE_URI+url}`,{
+        headers:{
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache',
+          'Expires': '0',
+        }
+      }).then(response=>{
+      
+  
+      if(response.data.result==null){
+        throw "Select Correct User";
+      }
+      dispatch(setCurrentUserRequestAction(response.data.result));
+    })
+    .catch( (error) =>{
+      console.log(error);
+      throw error;
+    })
+
     }
-  };
+  }
 
   const logOutUser = () => {
     dispatch(logOutUserRequestAction());
-    clear();
+    setlocal('');
     push('/login');
   };
 

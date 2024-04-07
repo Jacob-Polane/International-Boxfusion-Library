@@ -6,7 +6,7 @@ import { useCheckAUth } from '../../../utilis/navbar/helper';
 
 const AuthGuard : FC<PropsWithChildren>=({children})=>{
     const router=useRouter();
-    const {logIn,checkLogin,logOutUser,getUserDetails}=useCheckAUth();
+    const {logIn,checkLogin}=useCheckAUth();
 
     useEffect(()=>{
         checkLogin();

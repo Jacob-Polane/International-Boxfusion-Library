@@ -7,15 +7,15 @@ import { useStyles } from "./style.module";
 import { useRouter } from 'next/navigation';
 import { ILogin} from "../../../models/interface";
 import { useLoginActions} from "@/providers/authProvider";
-import  useLocalStorage  from "@/hooks";
+import { useLocalStorage } from "react-use";
 
 
 const Login: React.FC  = () =>{
 
     //auth
     const {login} = useLoginActions();
-    const{setValue:setRole}=useLocalStorage("isLibrarian","");
-    const {setValue:setName}=useLocalStorage("name","");
+    const[,setRole]=useLocalStorage("isLibrarian","");
+    const [,setName]=useLocalStorage("name","");
     //styles
     const {styles}=useStyles();
     //router

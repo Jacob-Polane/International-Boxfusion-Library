@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLoginState,useLoginActions } from "@/providers/authProvider";
-import  useLocalStorage  from "@/hooks";
+import { useLocalStorage } from "react-use";
 
 
 export const useDrawer=()=>{
@@ -18,7 +18,7 @@ export const useDrawer=()=>{
 export const useCheckAUth=()=>{
     const {logOutUser,getUserDetails} =useLoginActions();
     const state=useLoginState();
-    const {storedValue:local,setValue:setLocal}=useLocalStorage("token","")
+    const [local,setLocal]=useLocalStorage("token")
     const [logIn,setLogIn]=useState<boolean>(false);
     const checkLogin = ()=>{
         if(!state.currentUser){
