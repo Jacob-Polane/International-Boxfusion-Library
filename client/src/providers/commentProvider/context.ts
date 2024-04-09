@@ -1,15 +1,16 @@
 import {createContext} from 'react';
-import { CommentData } from '../../../models/interface';
+import { ICommentData } from '../../../models/interface';
 
 
 export interface ICommentState{
-    comments?:CommentData[]
+    comments?:ICommentData[]
 }
 
 export interface ICommentionActionState{
     getComments?:(id:string)=>void;
-    createComment?:(payload:CommentData,id:string)=>void;
+    createComment?:(payload:ICommentData,id:string)=>void;
+    clearComments?:()=>void;
 }
 
 export const CommentState=createContext<ICommentState>({});
-export const CommentActionState=createContext<ICommentionActionState>({});
+export const CommentActionState=createContext<ICommentionActionState>(undefined);

@@ -1,3 +1,4 @@
+'use client'
 import React,{FC, useEffect, useState} from 'react';
 import { Col, Row,Drawer } from 'antd';
 import {useStyles} from "./style.module";
@@ -8,6 +9,11 @@ import { useDrawer,useCheckAUth } from '../../../utilis/navbar/helper';
 import Profile from '../profile/Profile';
 import { useLoginState } from '@/providers/authProvider';
 import { useInterestAction } from '@/providers/InterestProvider';
+import { useLocalStorage } from 'react-use';
+import { useCommentAction } from '@/providers/commentProvider';
+import { useSearchActionContext } from '@/providers/searchProvider';
+import { useBookRequestAction } from '@/providers/requestBookprovider';
+
 
 const NavBar : FC = ()=>{
 
@@ -18,11 +24,19 @@ const NavBar : FC = ()=>{
   const {logIn,checkLogin,logOutUser}=useCheckAUth();
   const [isLibrarian,setIsLibrarian] = useState<boolean>(false);
   const action=useInterestAction();
+  const [role]=useLocalStorage("isLibrarian","");
+
+  const {clearComments}=useCommentAction();
+  const {clearBook}=useSearchActionContext();
+  const {viewHistory,clearRequest} = useBookRequestAction();
+  const {trendingBooks,getBookTrending,getRecommended}=useSearchActionContext();
 
   useEffect(()=>{
     checkLogin();
-    localStorage.getItem('isLibrarian')=='true'?setIsLibrarian(true):setIsLibrarian(false);
+    role=='true'?setIsLibrarian(true):setIsLibrarian(false);
     if(action.getInterests){action.getInterests()};
+    if(trendingBooks){trendingBooks()}
+    if(getRecommended){getRecommended()}
   },[])
 
   
@@ -104,7 +118,11 @@ const NavBar : FC = ()=>{
           md={{ flex: '40%' }}
           lg={{ flex: '20%' }}
           xl={{ flex: '15%' }}
-          onClick={()=>{if(logOutUser){logOutUser()}}}
+          onClick={()=>{
+            clearBook&&clearBook();
+            clearComments&&clearComments();
+            clearRequest&&clearRequest();
+            if(logOutUser){logOutUser()}}}
         >
 
           Logout

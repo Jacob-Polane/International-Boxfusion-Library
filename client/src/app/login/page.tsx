@@ -1,36 +1,43 @@
 'use client'
 import React from "react";
-import {Row,Col,Form,Input,Checkbox,Button, type FormProps,Switch} from 'antd';
+import {Row,Col,Form,Input,Checkbox,Button, type FormProps,Switch, message} from 'antd';
 import Image from 'next/image';
 import loginImage from '../../../public/login.png';
 import { useStyles } from "./style.module";
 import { useRouter } from 'next/navigation';
-import { ILogin } from "../../../models/interface";
-import { useLoginActions,useLoginState } from "@/providers/authProvider";
+import { ILogin} from "../../../models/interface";
+import { useLoginActions} from "@/providers/authProvider";
+import { useLocalStorage } from "react-use";
+import { LoadingOutlined } from "@ant-design/icons";
+
 
 const Login: React.FC  = () =>{
 
     //auth
     const {login} = useLoginActions();
-    const state =useLoginState();
-    console.log(state)
+    const[,setRole]=useLocalStorage("isLibrarian","");
+    const [,setName]=useLocalStorage("name","");
     //styles
     const {styles}=useStyles();
     //router
     const router = useRouter();
+
     
     //On Submit
     const onFinish :FormProps<ILogin>["onFinish"] =(values:ILogin)=>{
-      console.log(values)
+
       if(login){
         login(values);
-        values.isLibrarian?localStorage.setItem('isLibrarian','true'):localStorage.setItem('isLibrarian','false')
+        values.isLibrarian?setRole("true"):setRole("false");
         
-        localStorage.setItem('name', values.userNameOrEmailAddress)
+        setName(values.userNameOrEmailAddress);
       }
     }
 
-    const onFinishFailed:FormProps<ILogin>["onFinishFailed"] = (error) =>{}
+    const onFinishFailed:FormProps<ILogin>["onFinishFailed"] = (error) =>{
+      console.log(error)
+      message.error("failed")
+    }
     const [form] = Form.useForm();
     return (
         <div className={styles.container}>

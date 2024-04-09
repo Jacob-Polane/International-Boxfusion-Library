@@ -9,12 +9,17 @@ import { useCheckAUth } from '../../../utilis/navbar/helper';
 import { useLoginState } from '@/providers/authProvider';
 import { useRouter } from 'next/navigation';
 import { useBookRequest, useBookRequestAction, useBookRequestState } from '@/providers/requestBookprovider';
-import { useInterestState } from '@/providers/InterestProvider';
+import { useInterestAction, useInterestState } from '@/providers/InterestProvider';
 import useProfileHelper from '../../../utilis/profile/helper';
 import Interests from '../interests';
+import { useLocalStorage } from 'react-use';
+import { useSearchActionContext } from '@/providers/searchProvider';
+import { useCommentAction } from '@/providers/commentProvider';
+
+
 const Profile:FC =()=>{
     const [isLibrarian,setIsLibrarian] = useState<boolean>(false);
-
+    const [role]=useLocalStorage("isLibrarian","")
     const router=useRouter();
     
     const {styles} =useStyles();
@@ -28,10 +33,14 @@ const Profile:FC =()=>{
     const interest=useInterestState();
 
     
-    
-    const {viewHistory} = useBookRequestAction();
+    const {clearComments}=useCommentAction();
+    const {clearBook}=useSearchActionContext();
+    const {viewHistory,clearRequest} = useBookRequestAction();
     
     const logout=()=>{
+        clearBook&&clearBook();
+        clearComments&&clearComments();
+        clearRequest&&clearRequest();
         logOutUser&&logOutUser();
     }
 
@@ -47,9 +56,7 @@ const Profile:FC =()=>{
 
     useEffect(()=>{
         if(checkLogin){checkLogin()}
-        localStorage.getItem('isLibrarian')=='true'?setIsLibrarian(true):setIsLibrarian(false);
-        console.log(bookstate,'empty')
-        console.log(interest,'interests')
+        role=='true'?setIsLibrarian(true):setIsLibrarian(false);
     },[])
 
     return (

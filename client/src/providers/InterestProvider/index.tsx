@@ -2,18 +2,18 @@
 import React,{FC, PropsWithChildren, useContext, useReducer} from 'react';
 import { InterestActtionContext, InterestStateContext } from './context';
 import { reducer } from './reducer';
-import instance from '..';
-import { message } from 'antd';
-import { InterestActions, getInterestAction } from './action';
+import { clearRequestAction, getInterestAction } from './action';
 import { useSearchActionContext } from '../searchProvider';
+import useAxios from '..';
 
 const InterestsProvider:FC<PropsWithChildren>=({children})=>{
     const [state,dispath] = useReducer(reducer,{});
+    const {instance}=useAxios();
     const {getRecommended}=useSearchActionContext();
+
     const getInterests= async ()=>{ 
         await instance.get('services/app/Borrower/GetInterests').then(response=>
             {
-                console.log(response.data.result.interestCategory);
                 dispath(getInterestAction(response.data.result.interestCategory))
             }).catch(error=>console.log(error));
 
@@ -26,9 +26,13 @@ const InterestsProvider:FC<PropsWithChildren>=({children})=>{
         }).then(error=>console.log(error));
     }
 
+    const clearRequest=()=>{
+        dispath(clearRequestAction({}))
+    }
+
     return (
         <InterestStateContext.Provider value={{...state}}>
-            <InterestActtionContext.Provider value={{getInterests,saveInterests}}>
+            <InterestActtionContext.Provider value={{getInterests,saveInterests,clearRequest}}>
                 {children}
             </InterestActtionContext.Provider>
         </InterestStateContext.Provider>

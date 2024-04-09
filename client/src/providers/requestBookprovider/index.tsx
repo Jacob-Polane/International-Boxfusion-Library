@@ -3,14 +3,14 @@ import React ,{ FC,PropsWithChildren, useContext, useReducer} from 'react';
 import { INITIAL_STATE, IRequest, RequestActionContext, RequestContext, UpdateStatus } from './context';
 import { reducer } from './reducer';
 import { message } from 'antd';
-import { requestBookAction, viewBookAction, viewRequestedBooksAction } from './action';
-import instance from '..';
+import { clearRequestAction, requestBookAction, viewBookAction, viewRequestedBooksAction } from './action';
 import { IBook } from '../../../models/interface';
+import useAxios from '..';
 
 const RequestProvider:FC<PropsWithChildren> = ({children})=>{
     const [state,dispatch]=useReducer(reducer,INITIAL_STATE);
     const getState=()=>({...state})
-    
+    const {instance}=useAxios();
     const requestBook =async (payload:IRequest)=>{
       await instance.post('services/app/Outbook/Create',payload).then(response=>
                                                                 {
@@ -32,17 +32,14 @@ const RequestProvider:FC<PropsWithChildren> = ({children})=>{
     const viewAllRequest =async (status:string)=>{
       await instance.get(`services/app/Outbook/GetAll?status=${status}`).then(response=>
         {
-          console.log(response.data.result.map((data:any)=>({...data.book,status:data.status,oid:data.id})))
           dispatch(viewRequestedBooksAction(response.data.result.map((data:any)=>({...data.book,status:data.status,oid:data.id}))))
         })
         .catch((response)=>message.error(response.response.data.error.message)); 
     }
 
     const changeBookState=async (payload:UpdateStatus)=>{
-      console.log(payload,'statuschange api');
       await instance.post('services/app/Outbook/Update',payload).then(response=>
         {
-          console.log(response.data.result,'db')
           viewAllRequest('');
           message.success('Request Successful');
         })
@@ -53,9 +50,12 @@ const RequestProvider:FC<PropsWithChildren> = ({children})=>{
       await instance.post('services/app/Book/Create',payload).then(data=>{message.success("book created")}).catch((response)=>message.error(response.response.data.error.message()))
     }
 
+    const clearRequest=()=>{
+      dispatch(clearRequestAction({}))
+    }
     return (
     <RequestContext.Provider value={getState()}>
-        <RequestActionContext.Provider value={{requestBook,viewHistory,viewAllRequest,changeBookState,createBook}}>
+        <RequestActionContext.Provider value={{requestBook,viewHistory,viewAllRequest,changeBookState,createBook,clearRequest}}>
         {children}
         </RequestActionContext.Provider>
     </RequestContext.Provider>);

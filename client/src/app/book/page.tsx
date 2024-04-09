@@ -2,16 +2,14 @@
 import React,{FC, useEffect, useState} from 'react';
 import { Card ,Row,Tag,Button,Image} from 'antd'
 import { useStyles } from './style.module';
-
-import book from '../../../public/book1.jpg'
 import NavBar from '@/components/navbar/NavBar';
 import AuthGuard from '@/components/authGuard/AuthGuard';
 import { useSearchStateContext } from '@/providers/searchProvider';
 import { useRouter } from 'next/navigation';
-import { useBookRequestAction, useBookRequestState } from '@/providers/requestBookprovider';
+import { useBookRequestAction } from '@/providers/requestBookprovider';
 import { IRequest } from '@/providers/requestBookprovider/context';
 import { useLoginState } from '@/providers/authProvider';
-import {Comment,params,ViewComment} from '@/components/comments';
+import {Comment,ViewComment} from '@/components/comments';
 import { useCommentAction } from '@/providers/commentProvider';
 
 
@@ -23,10 +21,15 @@ const Book: FC =()=>{
 
     const status =useLoginState();
     const state=useSearchStateContext();
-    const bookRequest=useBookRequestState();
     const {requestBook}=useBookRequestAction();
     const router=useRouter();
     const {getComments}=useCommentAction();
+
+    useEffect(()=>{
+        setTimeout(()=>setLoading(false),3000);
+         getComments(state?.book?.id);
+    },[])
+
 
     const request=(id:string)=>{
         const values:IRequest={
@@ -34,15 +37,14 @@ const Book: FC =()=>{
             borrowerId:status.currentUser?.id,
             status:1
         }
-        console.log(values)
-        requestBook&&requestBook(values);
+        requestBook(values);
     }
-    useEffect(()=>{
-        setTimeout(()=>setLoading(false),3000);
-        console.log(bookRequest);
-        getComments&&getComments(state?.book?.id??'');
-    },[])
+  
 
+    if(!state.book&&state?.book?.id){
+        router.push('/search')
+        return ;
+    }
     return (
         <AuthGuard>
             
@@ -50,7 +52,7 @@ const Book: FC =()=>{
             <div className={styles.BookContainer} >
             {state.book?<Card title={state.book?.title} bordered={true} className={styles.BookCard} hoverable loading={loading}>
                 <Row >
-                    <Image  src={state.book.imageUrl} alt='book cover'/>
+                    <Image  src={state.book.imageUrl&&state?.book.imageUrl} alt='book cover'/>
 
                     <div className={styles.Authors}>
                         <h3 style={{color:'gray'}}>Authors:</h3>
@@ -80,7 +82,8 @@ const Book: FC =()=>{
                         {state.book.description}
                     </p> 
                 </Row>
-            </Card>:<>{router.push('/search')}</>}
+            </Card>:<>{router.push('search')}</>
+            }
             </div>
         </AuthGuard>
     );
