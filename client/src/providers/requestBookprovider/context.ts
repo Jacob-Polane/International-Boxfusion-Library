@@ -6,6 +6,7 @@ export interface IRequest{
     bookId:string;
     borrowerId?:string;
     status:number;
+    id:string;
 }
 export const INITIAL_STATE: IRequestStateContext={}
 
