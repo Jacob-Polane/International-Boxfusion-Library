@@ -77,6 +77,7 @@ const NavBar : FC = ()=>{
           md={{ flex: '40%' }}
           lg={{ flex: '20%' }}
           xl={{ flex: '15%' }}
+          onClick={()=>router.push('/about')}
         >
 
           About

@@ -13,9 +13,7 @@ const Request:React.FC =()=>{
     const {push}=useRouter();
     const state=useBookRequestState();
     const {columns}=useReqHelper();
-    useEffect(()=>{
-        console.log(state.booksRequested)
-    },[])
+    
       return (
         
             <DashNav>

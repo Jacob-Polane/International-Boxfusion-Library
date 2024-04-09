@@ -50,7 +50,7 @@ const RequestProvider:FC<PropsWithChildren> = ({children})=>{
     }
 
     const createBook =async (payload:IBook)=>{
-      await instance.post('services/app/Book/Create',payload).then(data=>console.log(data)).catch((response)=>message.error(response.response.data.error.message()))
+      await instance.post('services/app/Book/Create',payload).then(data=>{message.success("book created")}).catch((response)=>message.error(response.response.data.error.message()))
     }
 
     return (

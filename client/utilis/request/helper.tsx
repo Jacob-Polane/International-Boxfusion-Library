@@ -10,6 +10,13 @@ const useReqHelper=()=>{
     const {changeBookState}=useBookRequestAction();
     const columns: TableColumnsType<IBook> = [
         {
+            title: 'Transaction Id',
+            dataIndex: 'oid',
+            key: 'oid',
+            width: '30%'
+            
+          },
+        {
           title: 'title',
           dataIndex: 'title',
           key: 'title',
