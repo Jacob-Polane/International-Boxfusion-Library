@@ -2,7 +2,7 @@ import { createContext } from "react";
 import { IBook,IQuery } from "../../../models/interface";
 
 export interface IBookStateContext{
-    readonly books?:IBook[];
+    books?:IBook[];
     readonly book?:IBook;
     readonly trending?:IBook[];
     readonly Recommendations?:IBook[];
@@ -14,6 +14,7 @@ export interface IBookActionContext{
     trendingBooks?:()=>void;
     getBookTrending?:(index:string)=>void;
     getRecommended?:()=>void;
+    getRecommendedIntial?:(token:string)=>void;
 }
 export const INITIAL_STATE:IBookStateContext={};
 export const INITIAL_ACTION:IBookActionContext={};

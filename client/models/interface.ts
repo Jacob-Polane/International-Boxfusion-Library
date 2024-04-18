@@ -11,14 +11,14 @@ export interface IBook{
     number_Avaiable?:number;
     status?:number;
     oid?:string;
-    imageUrl?:string;
+    imageUrl?:any;
+    imageString:string;
+    fileData:any;
     description?:string;
 }
+
 export interface IQuery{
-    isbn?:string,
-    author?:string,
-    Category?:string,
-    title?:string
+    searchTerm:string
 }
 
 export interface IUser {

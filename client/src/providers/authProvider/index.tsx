@@ -1,17 +1,21 @@
 'use client'
-import React, { createContext, FC, PropsWithChildren, useContext, useEffect, useReducer } from 'react';
 import { message } from 'antd';
-import { useGet, useMutate } from 'restful-react';
-import { useRouter } from 'next/navigation';
-import { reducer} from './reducer';
-import { INITIAL_STATE, IUserActionContext, IUserStateContext, UserActionContext, UserContext } from './context';
-import { loginUserRequestAction,logOutUserRequestAction,setCurrentUserRequestAction} from './actions';
-import { ILogin ,IUser} from '../../../models/interface';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
+import { FC, PropsWithChildren, useContext, useReducer } from 'react';
+import { useMutate } from 'restful-react';
+import { ILogin, IUser } from '../../../models/interface';
+import { useInterestAction } from '../InterestProvider';
+import { useSearchActionContext } from '../searchProvider';
+import { loginUserRequestAction, logOutUserRequestAction, setCurrentUserRequestAction } from './actions';
+import { INITIAL_STATE, IUserActionContext, IUserStateContext, UserActionContext, UserContext } from './context';
+import { reducer } from './reducer';
 
 const AuthProvider: FC<PropsWithChildren<{}>> = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
   const { push } = useRouter();
+  const {getRecommendedIntial} =useSearchActionContext();
+  const {getInterestsIntialise}=useInterestAction();
 
 // Create a new Axios instance with default configuration
 const instance = axios.create({
@@ -33,8 +37,17 @@ const instance = axios.create({
   const login = async (payload: ILogin) => {
         await instance.post('TokenAuth/Authenticate',payload).then(async (response)=>
           {
-            console.log(response.data.result,'data')
+            console.log(getInterestsIntialise)
             localStorage.setItem('token', response.data.result.accessToken)
+           
+            console.log(localStorage.getItem('isLibrarian'))
+            if(getRecommendedIntial&&localStorage.getItem('isLibrarian')==''){
+            
+              getRecommendedIntial(response.data.result.accessToken);
+            }
+
+            if(getInterestsIntialise&&localStorage.getItem('isLibrarian')==''){getInterestsIntialise(response.data.result.accessToken)}
+
             dispatch(loginUserRequestAction(response.data.result))
             getUserDetails().then(()=>{
                                         if(localStorage.getItem('isLibrarian')=='true'){
@@ -97,6 +110,8 @@ const instance = axios.create({
     localStorage.clear();
     push('/login');
   };
+
+
 
   return (
     <UserContext.Provider value={{...state}}>

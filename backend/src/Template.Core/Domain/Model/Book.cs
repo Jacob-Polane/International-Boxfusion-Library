@@ -20,6 +20,7 @@ namespace Template.Domain.Model
         public virtual int ?Frequency {  get; set; }
         public virtual string Category { get; set; }
         public virtual int ?Number_Avaliable { get; set; }
+        public virtual File Image { get; set; }
         public ICollection<Comment> Comments { get; set; } = [];
 
     }

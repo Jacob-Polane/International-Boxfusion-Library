@@ -14,7 +14,7 @@ namespace Template.EntityFrameworkCore
         public DbSet<Borrower> Borrowers { get; set; }
         public DbSet<Librarian> Librarians { get; set; }
         public DbSet<OutBook> Outbooks { get; set; }
-
+        public DbSet<File> Files { get; set; }
         public DbSet<Comment> Comment { get; set; }
         public TemplateDbContext(DbContextOptions<TemplateDbContext> options)
             : base(options)

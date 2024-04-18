@@ -1,7 +1,7 @@
 'use client'
-import React from 'react';
-import {Col,Row} from 'antd';
 import DashNav from '@/components/dashboardNav/dashnav';
+import { Col, Row } from 'antd';
+import React from 'react';
 import useDashHelper from '../../../utilis/dashboard/helper';
 
 const Dashboard: React.FC = () => {

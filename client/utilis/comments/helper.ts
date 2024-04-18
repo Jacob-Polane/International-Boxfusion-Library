@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import { Button, Flex, Form, FormProps, Modal, Rate } from 'antd';
-import TextArea from 'antd/es/input/TextArea';
+import { FormProps } from 'antd';
+import { useState } from 'react';
 type FieldType ={
     Message?:string;
     rating?:number;

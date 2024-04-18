@@ -1,9 +1,9 @@
 'use client'
-import React, { PropsWithChildren, ReactNode, useEffect, useState } from 'react';
-import { Button, Drawer, Flex, Form, FormProps, Modal, Rate,Card } from 'antd';
-import TextArea from 'antd/es/input/TextArea';
-import { CommentData } from '../../../models/interface';
 import { useCommentAction, useCommentState } from '@/providers/commentProvider';
+import { Button, Card, Drawer, Flex, Form, FormProps, Modal, Rate } from 'antd';
+import TextArea from 'antd/es/input/TextArea';
+import React, { ReactNode } from 'react';
+import { CommentData } from '../../../models/interface';
 
 export interface params{
     children?:ReactNode;

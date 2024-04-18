@@ -1,8 +1,8 @@
-import { useCheckAUth } from '../navbar/helper';
-import React, { useState } from 'react';
-import { UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
-import { useRouter } from 'next/navigation';
 import { useBookRequestAction } from '@/providers/requestBookprovider';
+import { EditOutlined, LogoutOutlined, PlusCircleOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
+import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
+import { useCheckAUth } from '../navbar/helper';
 
 const useDashHelper=()=>{
     const router=useRouter();
@@ -12,14 +12,17 @@ const useDashHelper=()=>{
     enum functionType{
         User='User',
         Dashboard='Dashboard',
-        Books='Add Book',
+        Create='Create Book',
+        Books='Manage Books',
         Logout='Logout'
     }
+
     const functions={
         [functionType.User]:()=>{setShowProfile(true)},
         [functionType.Dashboard]:()=>{router.push('/dashboard')},
         [functionType.Logout]:()=>{if(logOutUser){logOutUser()}},
-        [functionType.Books]:()=>{router.push('/createbook')}
+        [functionType.Create]:()=>{router.push('/createbook')},
+        [functionType.Books]:()=>{router.push('/manage')}
     }
 
     const DashOperations={
@@ -44,8 +47,8 @@ const useDashHelper=()=>{
                       if(viewAllRequest){viewAllRequest('4')}
                     }
   }
-    const labels:functionType[]=[functionType.User,functionType.Dashboard,functionType.Books,functionType.Logout]
-    const items = [UserOutlined, VideoCameraOutlined, UploadOutlined,UserOutlined].map(
+    const labels:functionType[]=[functionType.User,functionType.Dashboard,functionType.Create,functionType.Books,functionType.Logout]
+    const items = [UserOutlined, VideoCameraOutlined, PlusCircleOutlined,EditOutlined,LogoutOutlined].map(
       (icon, index) => ({
         key: String(index + 1),
         icon: React.createElement(icon),

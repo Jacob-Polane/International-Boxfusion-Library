@@ -1,47 +1,45 @@
 'use client'
-import React,{FC, useEffect, useState} from "react";
-import NavBar from "@/components/navbar/NavBar";
-// import Image from 'next/image';
-import Book from '../../../public/book1.jpg';
-import Banner from '../../../public/banner.jpg';
-import {RightOutlined} from '@ant-design/icons'
 import HorizontalContainer from "@/components/HorizontalContainer/HorizontalContainer";
-import { Carousel,Card,Image} from 'antd';
-import { useStyles } from "./style.explore";
-import { useRouter } from "next/navigation";
+import NavBar from "@/components/navbar/NavBar";
+import { useInterestAction, useInterestState } from "@/providers/InterestProvider";
+import { useLoginState } from "@/providers/authProvider";
 import { useSearchActionContext, useSearchStateContext } from "@/providers/searchProvider";
+import { RightOutlined } from '@ant-design/icons';
+import { Card, Carousel, Image } from 'antd';
+import { isEmpty } from 'lodash';
+import { useRouter } from "next/navigation";
+import React, { useEffect } from "react";
 import { IBook } from "../../../models/interface";
-import {isEmpty} from 'lodash';
+import { useStyles } from "./style.explore";
 const {Meta} = Card;
-
-interface Idata{
-    title: string,
-    Author:string,
-    BookImgUrl:string,
-    Description:string
-}
 
 
 const Explore: React.FC  = () =>{
     const {styles}=useStyles();
     const router=useRouter();
-    const [dataState,setData]=useState<any>([]);
+    const {UserLogin}=useLoginState();
     const state=useSearchStateContext();
+    const {Interests}=useInterestState();
+    const {getInterests}=useInterestAction();
     const {trendingBooks,getBookTrending,getRecommended}=useSearchActionContext();
-    
+    const {Recommendations}=useSearchStateContext();
 
     useEffect(()=>{
         if(trendingBooks){trendingBooks()}
-        if(getRecommended){getRecommended()}
-         
-       
+        if(!Interests&&getInterests){
+          getInterests();
+        } 
+
+        if(!Recommendations&&getRecommended){
+          getRecommended();
+        }
     },[])
 
-    console.log(state,'HEllo state')
+
     const viewBook =(id:string)=>{
         if(getBookTrending){
             getBookTrending(id);
-          router.push('/book');
+            router.push('/book');
         }
         
       }
@@ -73,9 +71,9 @@ const Explore: React.FC  = () =>{
                             <Card
                               hoverable
                               className={styles.card}
-                              cover={<Image alt="example" src={data.imageUrl} height={200} width={200}/>}
+                              cover={<Image alt="trending" src={data.imageUrl===null?`data:image/png;base64,${data.imageString}`:data.imageUrl} height={200} width={200}/>}
                             >
-                              <Meta title={data.title} description={data.author+"  Date:"+data.publishedDate} />
+                              <Meta title={data.title} description={"Category:   "+data.category} />
                             </Card>
                             </div>
                         );
@@ -93,9 +91,9 @@ const Explore: React.FC  = () =>{
                             <Card
                               hoverable
                               className={styles.card}
-                              cover={<Image alt="example" src={data.imageUrl} height={200} width={200}/>}
+                              cover={<Image alt="recommendation" src={data.imageUrl===null?`data:image/png;base64,${data.imageString}`:data.imageUrl} height={200} width={200}/>}
                             >
-                              <Meta title={data.title} description={data.author+"  Date:"+data.publishedDate} />
+                              <Meta title={data.title} description={"Category:   "+data.category} />
                             </Card>
                             </div>
                         );

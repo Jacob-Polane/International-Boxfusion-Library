@@ -1,51 +1,63 @@
 'use client'
-import React, { useEffect, useState } from 'react';
-import {
-    Button,
-    Card,
-    Col,
-    DatePicker,
-    Form,
-    Input,
-    InputNumber,
-    Row,
-    Select
-  } from 'antd';
-import book from '../../../public/book.jpg';
 import DashNav from '@/components/dashboardNav/dashnav';
-import Image from 'next/image';
-import { IBook } from '../../../models/interface';
 import { useBookRequestAction } from '@/providers/requestBookprovider';
+import { UploadOutlined } from '@ant-design/icons';
+import {
+  Button,
+  Card,
+  Col,
+  DatePicker,
+  Form,
+  Input,
+  Row,
+  Select,
+  Upload
+} from 'antd';
+import { useForm } from 'antd/es/form/Form';
+import Image from 'next/image';
+import React from 'react';
+import { IBook } from '../../../models/interface';
+import book from '../../../public/book.jpg';
 
 const { TextArea } = Input;
 
 const Create:React.FC =()=>{
+  const [form] = useForm();
   const {createBook}=useBookRequestAction();
   const onFinish=(value:IBook)=>{
-    if(createBook){createBook(value)}
+    console.log({...value,fileData:value.imageUrl.file.originFileObj,frequency:0
+      })
+
+      form.resetFields();
+    if(createBook){createBook({...value,fileData:value.imageUrl.file.originFileObj,frequency:0
+    })}
   }
       return (
         
             <DashNav>
               <Card style={{display:'flex',flexDirection:'row'}} >
                 <Row >
-                  <Col style={{display:'flex',alignItems:'center',backgroundColor:'rgb(190, 230, 230)'}}>
-                    <Image src={book} alt="image" width={500} height={400}/>
+                  <Col style={{display:'flex',alignItems:'center',backgroundColor:'rgb(190, 230, 230)',width:'50%'}}>
+                    <Image src={book} alt="image" />
                   </Col>
                   <Col>
                   <Form
+                    form={form}
                     labelCol={{ span: 4 }}
                     wrapperCol={{ span: 14 }}
                     layout="horizontal"
-                    style={{ padding:10,borderRadius:7,backgroundColor:'rgb(235, 247, 226)'}}
+                    style={{ padding:5,borderRadius:7,backgroundColor:'rgb(235, 247, 226)',maxHeight:"100%"}}
                     onFinish={onFinish}
                   >
                   
                     <Form.Item<IBook> 
-                      label="Image Url" 
+                      label="Upload Image:" 
                       name='imageUrl'
+                      
                       >
-                      <Input/>
+                      <Upload style={{marginLeft:10}}>
+                        <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                      </Upload>
                     </Form.Item>
 
                     <Form.Item<IBook>
@@ -70,13 +82,13 @@ const Create:React.FC =()=>{
                       >
                       <TextArea/>
                     </Form.Item>
-
+                 
                     <Form.Item<IBook>
                       label="ISBN 10" 
                       name='isbn10' 
                       rules={[{max:10,min:10,message:"ISBN 10 must be 10 characters"}]}
                       >
-                      <Input />
+                      <Input style={{marginLeft:10}}/>
                     </Form.Item>
 
                     <Form.Item<IBook> 
@@ -84,9 +96,9 @@ const Create:React.FC =()=>{
                       name='isbn13' 
                       rules={[{max:13,min:13,message:"ISBN 13 must be 13 characters"}]}
                       >
-                      <Input />
+                      <Input  />
                     </Form.Item>
-
+                  
                     <Form.Item<IBook> 
                       label="Publisher" 
                       name='publisher' 
@@ -96,15 +108,9 @@ const Create:React.FC =()=>{
                     </Form.Item>
 
                     <Form.Item<IBook> 
-                      label="Published Date" 
+                      label="Date" 
                       name='publishedDate'>
                       <DatePicker />
-                    </Form.Item>
-
-                    <Form.Item<IBook> 
-                      label="Frequency" 
-                      name='frequency'>
-                      <InputNumber />
                     </Form.Item>
 
                     <Form.Item<IBook> label="Category" name='category' rules={[{ required: true, message: 'Please select the category' }]}>
@@ -119,15 +125,11 @@ const Create:React.FC =()=>{
                       </Form.Item>
 
                       <Form.Item>
-                        <Button  style={{width:560,backgroundColor:'#45b26b',color:'white',fontWeight:'bold'}}  htmlType='submit'>Submit</Button>
+                        <Button  style={{width:530,backgroundColor:'#45b26b',color:'white',fontWeight:'bold'}}  htmlType='submit'>Submit</Button>
                       </Form.Item>
                   </Form>
-
                   </Col>
                 </Row>
-              
-              
-              
               </Card>   
             </DashNav>
         

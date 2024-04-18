@@ -46,6 +46,7 @@ namespace Template.Services.BorrowerAppService
         /// 
         /// </summary>
         /// <returns></returns>
+        [AbpAuthorize]
         [HttpGet]
 
         public async Task<BorrowerDto> GetIdOfCurrentUser()
@@ -143,6 +144,7 @@ namespace Template.Services.BorrowerAppService
         /// <param name="result"></param>
         protected virtual void CheckErrors(IdentityResult result) => result.CheckErrors(LocalizationManager);
 
+        [AbpAuthorize]
         public async Task<InterestDto> CreateInterest(InterestDto input)
         {
             var borrower = await _BorrowerRepository.FirstOrDefaultAsync(x => x.User.Id == AbpSession.UserId);
@@ -157,16 +159,13 @@ namespace Template.Services.BorrowerAppService
                     borrower.InterestCategory.Add(itr);
                 }
             }
-            
-           
-
-            return ObjectMapper.Map<InterestDto>(borrower);
-            
+            return ObjectMapper.Map<InterestDto>(borrower);        
         }
 
+
+        [AbpAuthorize]
         public async Task<InterestDto> GetInterests()
-        {
-            
+        {      
             var borrower = await _BorrowerRepository.FirstOrDefaultAsync(x => x.User.Id == AbpSession.UserId);
 
             return ObjectMapper.Map<InterestDto>(borrower);

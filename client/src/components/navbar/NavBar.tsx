@@ -1,13 +1,14 @@
-import React,{FC, useEffect, useState} from 'react';
-import { Col, Row,Drawer } from 'antd';
-import {useStyles} from "./style.module";
-import Image from 'next/image';
-import Logo from '../../../public/Logo.jpg'
-import { useRouter } from 'next/navigation';
-import { useDrawer,useCheckAUth } from '../../../utilis/navbar/helper';
-import Profile from '../profile/Profile';
 import { useLoginState } from '@/providers/authProvider';
-import { useInterestAction } from '@/providers/InterestProvider';
+import { useSearchActionContext } from '@/providers/searchProvider';
+import { Col, Drawer, Row } from 'antd';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { FC, useEffect, useState } from 'react';
+import Logo from '../../../public/Logo.jpg';
+import { useCheckAUth, useDrawer } from '../../../utilis/navbar/helper';
+import Profile from '../profile/Profile';
+import { useStyles } from "./style.module";
+
 
 const NavBar : FC = ()=>{
 
@@ -17,14 +18,16 @@ const NavBar : FC = ()=>{
   const {open,onClose,showDrawer}=useDrawer();
   const {logIn,checkLogin,logOutUser}=useCheckAUth();
   const [isLibrarian,setIsLibrarian] = useState<boolean>(false);
-  const action=useInterestAction();
+  const {getRecommended}=useSearchActionContext();
 
   useEffect(()=>{
     checkLogin();
     localStorage.getItem('isLibrarian')=='true'?setIsLibrarian(true):setIsLibrarian(false);
-    if(action.getInterests){action.getInterests()};
   },[])
 
+  const explore=()=>{
+    router.push('/explore');
+  }
   
     return (
         <Row className={styles.row}>
@@ -48,7 +51,7 @@ const NavBar : FC = ()=>{
           md={{ flex: '40%' }}
           lg={{ flex: '20%' }}
           xl={{ flex: '15%' }}
-          onClick={()=> router.push('/explore')}
+          onClick={explore}
         >
 
           Explore

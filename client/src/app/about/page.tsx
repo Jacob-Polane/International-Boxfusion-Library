@@ -1,9 +1,9 @@
 'use client'
-import React,{FC} from 'react';
-import Image from 'next/image';
-import ABT from '../../../public/Abt.jpg'
 import NavBar from '@/components/navbar/NavBar';
 import { Card, Col, Row } from 'antd';
+import Image from 'next/image';
+import { FC } from 'react';
+import ABT from '../../../public/Abt.jpg';
 
 const About:FC=()=>{
     

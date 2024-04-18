@@ -1,10 +1,10 @@
 'use client'
-import React,{FC, PropsWithChildren, useContext, useReducer} from 'react';
+import React, { PropsWithChildren, useContext, useReducer } from 'react';
+import instance from '..';
+import { CommentData } from '../../../models/interface';
+import { GetComments } from './action';
 import { CommentActionState, CommentState, ICommentState, ICommentionActionState } from './context';
 import { reducer } from './reducer';
-import instance from '..';
-import { CommentAction, GetComments } from './action';
-import { CommentData } from '../../../models/interface';
 
 const CommentProvider:React.FC<PropsWithChildren>=({children})=>{
     const [state,dispatch]=useReducer(reducer,{});

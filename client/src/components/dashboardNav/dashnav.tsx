@@ -1,10 +1,11 @@
-import useDashHelper from '../../../utilis/dashboard/helper';
 import { Drawer, Layout, Menu, theme } from 'antd';
 import Sider from 'antd/es/layout/Sider';
-import React, { FC, PropsWithChildren } from 'react';
-import Profile from '../profile/Profile';
 import { Content, Footer, Header } from 'antd/es/layout/layout';
+import { FC, PropsWithChildren } from 'react';
+import useDashHelper from '../../../utilis/dashboard/helper';
 import AuthGuard from '../authGuard/AuthGuard';
+import Profile from '../profile/Profile';
+
 
 const DashNav:FC<PropsWithChildren>=({children})=>{
     const {items,showProfile,setShowProfile}=useDashHelper();
@@ -29,7 +30,7 @@ const DashNav:FC<PropsWithChildren>=({children})=>{
               </Sider>
             <Layout>
             <Header style={{ padding: 0, background: colorBgContainer }}  ><h1 style={{color:'gray',marginLeft:16}}>Librarian Portal</h1></Header>
-            <Content style={{ margin: '20px 16px 0'}}>
+            <Content style={{ margin: '20px 16px 0',maxHeight:"100%"}}>
                 {children}
             </Content>
             <Footer style={{ textAlign: 'center' ,padding:0}}>

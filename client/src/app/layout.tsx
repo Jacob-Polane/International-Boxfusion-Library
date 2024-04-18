@@ -21,17 +21,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <SearchProvider>
+      <InterestsProvider>
       <AuthProvider> 
-        <SearchProvider>
           <RequestProvider>
             <CommentProvider>
-              <InterestsProvider>
               <body className={inter.className}>{children}</body>
-              </InterestsProvider>
             </CommentProvider>
           </RequestProvider>
-        </SearchProvider>
       </AuthProvider>
+      </InterestsProvider>
+      </SearchProvider>
     </html>
   );
 }

@@ -1,17 +1,17 @@
 'use client'
-import React,{FC, useEffect, useState} from 'react';
-import Image from 'next/image';
-import Logo from '../../../public/Logo.jpg'
-import { useStyles } from './styles.module';
-import {Card,Row,Col,Tag,Button,Modal} from 'antd';
-import AuthGuard from '../authGuard/AuthGuard';
-import { useCheckAUth } from '../../../utilis/navbar/helper';
-import { useLoginState } from '@/providers/authProvider';
-import { useRouter } from 'next/navigation';
-import { useBookRequest, useBookRequestAction, useBookRequestState } from '@/providers/requestBookprovider';
 import { useInterestState } from '@/providers/InterestProvider';
+import { useLoginState } from '@/providers/authProvider';
+import { useBookRequestAction, useBookRequestState } from '@/providers/requestBookprovider';
+import { Button, Card, Col, Modal, Row, Tag } from 'antd';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { FC, useEffect, useState } from 'react';
+import Logo from '../../../public/Logo.jpg';
+import { useCheckAUth } from '../../../utilis/navbar/helper';
 import useProfileHelper from '../../../utilis/profile/helper';
+import AuthGuard from '../authGuard/AuthGuard';
 import Interests from '../interests';
+import { useStyles } from './styles.module';
 const Profile:FC =()=>{
     const [isLibrarian,setIsLibrarian] = useState<boolean>(false);
 
@@ -38,7 +38,6 @@ const Profile:FC =()=>{
     const handleViewHistory=()=>{
         if(viewHistory){
             viewHistory();
-            
             router.push('/history')
 
         }
@@ -48,8 +47,6 @@ const Profile:FC =()=>{
     useEffect(()=>{
         if(checkLogin){checkLogin()}
         localStorage.getItem('isLibrarian')=='true'?setIsLibrarian(true):setIsLibrarian(false);
-        console.log(bookstate,'empty')
-        console.log(interest,'interests')
     },[])
 
     return (

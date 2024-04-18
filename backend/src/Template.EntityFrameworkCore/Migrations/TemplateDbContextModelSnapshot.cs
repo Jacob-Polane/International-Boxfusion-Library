@@ -1609,6 +1609,9 @@ namespace Template.Migrations
                     b.Property<int?>("Frequency")
                         .HasColumnType("int");
 
+                    b.Property<Guid?>("ImageId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
@@ -1640,6 +1643,8 @@ namespace Template.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ImageId");
 
                     b.ToTable("Books");
                 });
@@ -1750,6 +1755,29 @@ namespace Template.Migrations
                     b.HasIndex("BookId");
 
                     b.ToTable("Comment");
+                });
+
+            modelBuilder.Entity("Template.Domain.Model.File", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("FileExtention")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("FileLength")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("FilePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Filename")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Files");
                 });
 
             modelBuilder.Entity("Template.Domain.Model.Librarian", b =>
@@ -2141,6 +2169,15 @@ namespace Template.Migrations
                     b.Navigation("DeleterUser");
 
                     b.Navigation("LastModifierUser");
+                });
+
+            modelBuilder.Entity("Template.Domain.Model.Book", b =>
+                {
+                    b.HasOne("Template.Domain.Model.File", "Image")
+                        .WithMany()
+                        .HasForeignKey("ImageId");
+
+                    b.Navigation("Image");
                 });
 
             modelBuilder.Entity("Template.Domain.Model.Borrower", b =>

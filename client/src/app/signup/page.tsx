@@ -1,12 +1,12 @@
 'use client'
-import React from "react";
-import {Row,Col,Form,Input,Button, type FormProps,Select,Space} from 'antd';
-import Image from 'next/image';
-import signup from '../../../public/login.png';
-import {useStyles} from './style.module';
-import { useRouter } from 'next/navigation';
-import { IUser } from "../../../models/interface";
 import { useLoginActions } from "@/providers/authProvider";
+import { Button, Col, Form, Input, Row, Select, Space, type FormProps } from 'antd';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import React from "react";
+import { IUser } from "../../../models/interface";
+import signup from '../../../public/login.png';
+import { useStyles } from './style.module';
 
 const Signup: React.FC = () => {
 

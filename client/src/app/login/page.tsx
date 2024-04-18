@@ -1,19 +1,18 @@
 'use client'
-import React from "react";
-import {Row,Col,Form,Input,Checkbox,Button, type FormProps,Switch} from 'antd';
+import { useLoginActions, useLoginState } from "@/providers/authProvider";
+import { Button, Checkbox, Col, Form, Input, Row, Switch, type FormProps } from 'antd';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import React, { useState } from "react";
+import { ILogin } from "../../../models/interface";
 import loginImage from '../../../public/login.png';
 import { useStyles } from "./style.module";
-import { useRouter } from 'next/navigation';
-import { ILogin } from "../../../models/interface";
-import { useLoginActions,useLoginState } from "@/providers/authProvider";
 
 const Login: React.FC  = () =>{
-
+    const [isSubmitted, setIsSubmitted] = useState(false);
     //auth
     const {login} = useLoginActions();
     const state =useLoginState();
-    console.log(state)
     //styles
     const {styles}=useStyles();
     //router
@@ -21,13 +20,18 @@ const Login: React.FC  = () =>{
     
     //On Submit
     const onFinish :FormProps<ILogin>["onFinish"] =(values:ILogin)=>{
-      console.log(values)
+      if (isSubmitted) {
+        return;
+      }
+  
       if(login){
         login(values);
         values.isLibrarian?localStorage.setItem('isLibrarian','true'):localStorage.setItem('isLibrarian','false')
         
         localStorage.setItem('name', values.userNameOrEmailAddress)
       }
+      setIsSubmitted(true);
+      setTimeout(() => setIsSubmitted(false), 10000);
     }
 
     const onFinishFailed:FormProps<ILogin>["onFinishFailed"] = (error) =>{}
@@ -95,7 +99,7 @@ const Login: React.FC  = () =>{
                     
                     <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                       <Button type="primary" htmlType="submit" >
-                        Submit
+                        {isSubmitted ? 'Submitting...' : 'Submit'}
                       </Button>
                     </Form.Item>
                 </Form>

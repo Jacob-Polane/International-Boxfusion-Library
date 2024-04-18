@@ -1,7 +1,9 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,5 +25,12 @@ namespace Template.Services.BookAppService.Dto
         public  int Number_Avaliable { get; set; }
         public string? Description { get; set; }
         public string? ImageUrl { get; set; }
+
+        public Guid? ImageId { get; set; }
+
+        public string? imageString { get; set; }
+
+        [NotMapped]
+        public IFormFile? File { get; set; }
     }
 }

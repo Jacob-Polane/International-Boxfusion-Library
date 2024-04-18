@@ -1,18 +1,16 @@
 'use client'
-import React,{FC, useEffect, useState} from 'react';
-import { Card ,Row,Tag,Button,Image} from 'antd'
-import { useStyles } from './style.module';
-
-import book from '../../../public/book1.jpg'
-import NavBar from '@/components/navbar/NavBar';
 import AuthGuard from '@/components/authGuard/AuthGuard';
-import { useSearchStateContext } from '@/providers/searchProvider';
-import { useRouter } from 'next/navigation';
+import { Comment, ViewComment } from '@/components/comments';
+import NavBar from '@/components/navbar/NavBar';
+import { useLoginState } from '@/providers/authProvider';
+import { useCommentAction } from '@/providers/commentProvider';
 import { useBookRequestAction, useBookRequestState } from '@/providers/requestBookprovider';
 import { IRequest } from '@/providers/requestBookprovider/context';
-import { useLoginState } from '@/providers/authProvider';
-import {Comment,params,ViewComment} from '@/components/comments';
-import { useCommentAction } from '@/providers/commentProvider';
+import { useSearchStateContext } from '@/providers/searchProvider';
+import { Button, Card, Image, Row, Tag } from 'antd';
+import { useRouter } from 'next/navigation';
+import { FC, useEffect, useState } from 'react';
+import { useStyles } from './style.module';
 
 
 const Book: FC =()=>{
@@ -50,7 +48,7 @@ const Book: FC =()=>{
             <div className={styles.BookContainer} >
             {state.book?<Card title={state.book?.title} bordered={true} className={styles.BookCard} hoverable loading={loading}>
                 <Row >
-                    <Image  src={state.book.imageUrl} alt='book cover'/>
+                    <Image  src={state.book.imageUrl==null?`data:image/png;base64,${state.book.imageString}`:state.book.imageUrl} alt='book cover' style={{maxWidth:200,maxHeight:200}}/>
 
                     <div className={styles.Authors}>
                         <h3 style={{color:'gray'}}>Authors:</h3>

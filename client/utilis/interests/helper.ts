@@ -1,8 +1,6 @@
-import React, { FC,useEffect, useRef, useState } from 'react';
-import { PlusOutlined } from '@ant-design/icons';
 import type { InputRef, SelectProps } from 'antd';
-import { Input, Tag, theme } from 'antd';
-import { useInterestState } from '@/providers/InterestProvider';
+import { theme } from 'antd';
+import React, { useRef, useState } from 'react';
 
 export const useInterestHelper =()=>{
 

@@ -1,11 +1,11 @@
 'use client'
-import React ,{ FC,PropsWithChildren, useContext, useReducer} from 'react';
-import { INITIAL_STATE, IRequest, RequestActionContext, RequestContext, UpdateStatus } from './context';
-import { reducer } from './reducer';
 import { message } from 'antd';
-import { requestBookAction, viewBookAction, viewRequestedBooksAction } from './action';
+import { FC, PropsWithChildren, useContext, useReducer } from 'react';
 import instance from '..';
 import { IBook } from '../../../models/interface';
+import { deleteStateAction, requestBookAction, updateAction, viewBookAction, viewRequestedBooksAction } from './action';
+import { INITIAL_STATE, IRequest, RequestActionContext, RequestContext, UpdateStatus } from './context';
+import { reducer } from './reducer';
 
 const RequestProvider:FC<PropsWithChildren> = ({children})=>{
     const [state,dispatch]=useReducer(reducer,INITIAL_STATE);
@@ -49,13 +49,47 @@ const RequestProvider:FC<PropsWithChildren> = ({children})=>{
         .catch((response)=>message.error(response.response.data.error.message)); 
     }
 
-    const createBook =async (payload:IBook)=>{
-      await instance.post('services/app/Book/Create',payload).then(data=>{message.success("book created")}).catch((response)=>message.error(response.response.data.error.message()))
+
+    const update=async(payload:IBook)=>{
+      await instance.put('services/app/Book/Update',payload).then((res)=>{
+        dispatch(updateAction({...state.books?.filter(x=>x.id!==payload.id),...res.data.result}))
+        message.success("successfully updated")
+      }).catch(response=>message.error(response.response.data.error.message()))
     }
 
+    const deleteBook =async (id:string)=>{
+      await instance.delete(`services/app/Book/Delete?Id=${id}`).then(response=>{
+        dispatch(deleteStateAction(state.books?.filter(x=>x.id===id)??[]))
+        message.success("Successfully Deleted");
+      })
+    }
+
+    const createBook =async (payload:IBook)=>{
+
+    
+      const formData = new FormData();
+      //book.categoryID = "1E27D26D-8EF9-411D-94E9-08DC4A40801A";
+      formData.append('title', payload.title);
+      formData.append('author', payload?.author);
+      formData.append('publisher', payload?.publisher??'');
+      formData.append('category', payload.category);
+      formData.append('isbn10', payload?.isbn10??'');
+      formData.append('isbn13', payload?.isbn13??'');
+      formData.append('description', payload?.description??'');
+      formData.append('publishedDate',payload.publishedDate??'');
+      formData.append('file', payload.fileData );
+      await instance.post('services/app/Book/CreateBook',formData
+      ,
+        { headers: {
+          'Content-Type': 'multipart/form-data',
+        }}
+      ).then(data=>{console.log(data) ;message.success("book created")}).catch((response)=>message.error(response.response.data.error.message()))
+    }
+
+    
     return (
     <RequestContext.Provider value={getState()}>
-        <RequestActionContext.Provider value={{requestBook,viewHistory,viewAllRequest,changeBookState,createBook}}>
+        <RequestActionContext.Provider value={{requestBook,viewHistory,viewAllRequest,changeBookState,createBook,update,deleteBook}}>
         {children}
         </RequestActionContext.Provider>
     </RequestContext.Provider>);

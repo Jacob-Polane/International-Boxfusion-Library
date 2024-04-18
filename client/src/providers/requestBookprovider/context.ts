@@ -6,7 +6,7 @@ export interface IRequest{
     bookId:string;
     borrowerId?:string;
     status:number;
-    id:string;
+    id?:string;
 }
 export const INITIAL_STATE: IRequestStateContext={}
 
@@ -14,7 +14,7 @@ export interface IRequestStateContext {
     readonly request?:IRequest;
     readonly history?:IBook[];
     readonly booksRequested?:IBook[];
-
+    readonly books?:IBook[];
 }
 
 export interface UpdateStatus{
@@ -28,6 +28,8 @@ export interface IRequestActionContext{
     viewAllRequest?:(status:string)=>void;
     changeBookState?:(status:UpdateStatus)=>void;
     createBook?:(payload:IBook)=>void;
+    update?:(payload:IBook)=>void;
+    deleteBook?:(id:string)=>void;
 }
 
 const RequestContext = createContext<IRequestStateContext>(INITIAL_STATE);

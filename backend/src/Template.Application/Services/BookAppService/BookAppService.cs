@@ -1,6 +1,7 @@
 ﻿using Abp.Application.Services;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
+using Abp.UI;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Template.Domain.Model;
 using Template.Services.BookAppService.Dto;
+using Template.Services.FileAppService;
+using Template.Services.FileAppService.Dto;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Template.Services.BookAppService
 {
@@ -19,15 +23,18 @@ namespace Template.Services.BookAppService
     {
         private readonly IRepository<Book,Guid> _repository;
         private readonly IRepository<Borrower,Guid> _personRepository;
+        private readonly IFileAppService _fileAppService;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="repository"></param>
-        public BookAppService(IRepository<Book, Guid> repository,IRepository<Borrower,Guid> personRepository) : base(repository) { 
+        public BookAppService(IRepository<Book, Guid> repository,IRepository<Borrower,Guid> personRepository,IFileAppService fileAppService) : base(repository) { 
         
             this._repository=repository;
             this._personRepository = personRepository;
+            this._fileAppService = fileAppService;
+          
         }
 
         /// <summary>
@@ -44,7 +51,7 @@ namespace Template.Services.BookAppService
         //...Book?/search?author=...&isbn=...
         public async Task<List<BookDto>> search([FromQuery] string? isbn, [FromQuery] string? author, [FromQuery] string? Category, [FromQuery] string? title)
         {
-            var query = this._repository.GetAllIncluding(x=>x.Comments).AsQueryable();
+            var query = this._repository.GetAllIncluding(x=>x.Comments,x=>x.Image).AsQueryable();
 
 
             //filtering using isbn
@@ -78,8 +85,19 @@ namespace Template.Services.BookAppService
             {
                 query = query.Where(x => x.Title.Contains(title));
             }
-
-            return ObjectMapper.Map<List<BookDto>>(await query.ToListAsync());
+            List<BookDto> list= ObjectMapper.Map<List<BookDto>>(await query.ToListAsync());
+            
+            
+            
+            foreach(BookDto i in list)
+            {
+                if (i.ImageId != null)
+                {
+                    i.imageString = await _fileAppService.GetFile((Guid)i.ImageId);
+                }
+                
+            }
+            return list;
         }
 
 
@@ -109,13 +127,81 @@ namespace Template.Services.BookAppService
         /// 
         /// </summary>
         /// <returns></returns>
+        [AbpAuthorize]
         [HttpGet]
 
         public async Task<List<BookDto>> GetRecommendation()
         {
-            var person = await _personRepository.FirstOrDefaultAsync(x => x.User.Id == AbpSession.UserId);
-            var query = await _repository.GetAll().Where(x => person.InterestCategory.Contains(x.Category)).Take(15).ToListAsync();
-            return ObjectMapper.Map<List<BookDto>>(query);
+            if (AbpSession.UserId!=null)
+            {
+                var person = await _personRepository.FirstOrDefaultAsync(x => x.User.Id == AbpSession.UserId);
+                var query = await _repository.GetAll().Where(x => person.InterestCategory.Contains(x.Category)).Take(15).ToListAsync();
+                return ObjectMapper.Map<List<BookDto>>(query);
+            }
+            else
+            {
+                throw new UserFriendlyException("User is not logged in");
+            }
+            
+        }
+
+        [AbpAuthorize]
+        [HttpPost]
+        [Consumes("multipart/form-data")]
+        public async Task<BookDto> createBook([FromForm] BookDto input)
+        {
+            try
+            {
+                var file = await _fileAppService.CreateFile(new FileDto { FileData=input.File } );
+                var result = ObjectMapper.Map<Book>(input);
+                result.Image = file;
+                await _repository.InsertAsync(result);
+                CurrentUnitOfWork.SaveChanges();
+
+                return ObjectMapper.Map<BookDto>(result);
+
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("Failed to Create " + ex.Message);
+            }
+        }
+
+        public async Task<BookDto> getBookById(Guid id)
+        {
+            var file = await _repository.GetAllIncluding(x=>x.Image).Where(x => x.Id == id).ToListAsync();
+            var fileWithFile = ObjectMapper.Map<List<BookDto>>(file);
+            fileWithFile[0].imageString = await _fileAppService.GetFile((Guid)fileWithFile[0].ImageId);
+
+            return fileWithFile[0];
+        }
+
+        [AbpAuthorize]
+        [HttpGet]
+        
+        public async Task<List<BookDto>> SearchBooks([FromQuery]string searchTerm)
+        {
+           
+            var books = this._repository.GetAllIncluding(x => x.Comments, x => x.Image).AsQueryable();
+
+            var filteredBooks =await books
+                .Where(b => b.Title.Contains(searchTerm)   ||
+                            b.Isbn10.Contains(searchTerm)  ||
+                            b.Isbn13.Contains(searchTerm)  ||
+                            b.Category.Contains(searchTerm)||
+                            b.Author.Contains(searchTerm))
+                .ToListAsync();
+
+            var list= ObjectMapper.Map<List<BookDto>>(filteredBooks);
+            foreach (BookDto i in list)
+            {
+                if (i.ImageId != null)
+                {
+                    i.imageString = await _fileAppService.GetFile((Guid)i.ImageId);
+                }
+
+            }
+            return list;
         }
     }
 }

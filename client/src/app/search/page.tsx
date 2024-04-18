@@ -1,18 +1,19 @@
 'use client'
-import React,{FC,useState,useEffect}from 'react';
-import { useRouter } from 'next/navigation';
-import {Form,type FormProps,Button,Input,List,message,Avatar} from 'antd';
-import VirtualList from 'rc-virtual-list';
-import NavBar from '@/components/navbar/NavBar';
 import AuthGuard from '@/components/authGuard/AuthGuard';
-import { IBook,IQuery } from '../../../models/interface';
+import NavBar from '@/components/navbar/NavBar';
 import { useSearchActionContext, useSearchStateContext } from '@/providers/searchProvider';
-import searchImage from '../../../public/searchImage.webp';
+import { Button, Form, Input, List, message, type FormProps } from 'antd';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import VirtualList from 'rc-virtual-list';
+import React, { FC, useEffect } from 'react';
+import { useSearchParam } from 'react-use';
+import { IBook, IQuery } from '../../../models/interface';
+import searchImage from '../../../public/searchImage.webp';
 import { useStyles } from './style.module';
-import { useInterestAction, useInterestState } from '@/providers/InterestProvider';
 
 const Search: FC =()=>{
+  const searchTerm=useSearchParam('searchTerm');
 
   const status=useSearchStateContext();
   const {searchBook,clearBook,getBook}=useSearchActionContext();
@@ -21,20 +22,20 @@ const Search: FC =()=>{
 
   useEffect(()=>{
     if(clearBook){clearBook()};
+    if(searchTerm!==null){
+      if(onFinish)
+      onFinish({searchTerm:`${searchTerm}`});
+    }
   },[])
 
   const onFinish: FormProps<IQuery>["onFinish"] = async (values:IQuery) => {
-    values.isbn=values.isbn?values.isbn:'';
-    values.author=values.author?values.author:'';
-    values.Category=values.Category?values.Category:'';
-    values.title=values.title?values.title:'';
-    if(values.isbn===''&&
-      values.author===''&&
-      values.Category===''&&
-      values.title===''){
+    
+    if(values.searchTerm==''){
         message.error("Please enter atleast one input")
         return;
       }
+      //const query=new URLSearchParams({...values});
+      //.pushState({}, '', location.pathname + '?'+'title=123')
     if(searchBook){
       await searchBook(values);  
     }
@@ -58,24 +59,21 @@ const Search: FC =()=>{
   return(
   <AuthGuard>
       <div >
+        
          <NavBar/>
-          <Form layout='inline'  className={styles.FormStyle} onFinish={onFinish}>
-             <Form.Item <IQuery> label="ISBN" name="isbn">
-              <Input  placeholder="Search by ISBN 10 or 13" style={{width:200}}/>
-            </Form.Item>
-            <Form.Item <IQuery> label="Author" name="author">
-              <Input placeholder="Search by Author" style={{width:200}} />
-            </Form.Item>
-            <Form.Item <IQuery> label="Category" name="Category">
-              <Input  placeholder="Search by category" style={{width:200}} />
-            </Form.Item>
-            <Form.Item <IQuery> label="Title" name="title">
-              <Input  placeholder="Search by title" style={{width:200}} />
+          <Form layout='inline'  
+              className={styles.FormStyle} 
+              onFinish={onFinish}
+              initialValues={{searchTerm:searchTerm!==null?searchTerm:''}}
+              >
+             <Form.Item <IQuery>  name="searchTerm">
+              <Input  placeholder="Use keyword to search" style={{width:500}}/>
             </Form.Item>
             <Form.Item  wrapperCol={{ span: 8, offset: 0 }}>
               <Button type="primary" htmlType='submit'>Search</Button>
             </Form.Item>
           </Form>
+
           {(!status.books)?
           <Image  src={searchImage} alt='image' width={500} height={400} style={{marginTop:100,marginLeft:400}}></Image>         
           :<List style={{width:'100%',alignItems:'center',padding:20,display:'flex',justifyContent:'center',fontSize:20}}>

@@ -7,6 +7,7 @@ export interface IInterestState{
 export interface IInterestAction{
     getInterests?:()=>void;
     saveInterests?:(interests:string[])=>void;
+    getInterestsIntialise?: (token:string)=>void;
 }
 
 export const InterestStateContext=createContext<IInterestState>({});

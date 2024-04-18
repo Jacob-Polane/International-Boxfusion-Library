@@ -1,7 +1,6 @@
-import  React from 'react';
 import { createAction } from 'redux-actions';
-import {IUserStateContext} from './context';
-import { IUser,ILogin } from '../../../models/interface';
+import { ILogin, IUser } from '../../../models/interface';
+import { IUserStateContext } from './context';
 
 export enum UserActionEnum{
     LOGIN_USER = 'LOGIN',

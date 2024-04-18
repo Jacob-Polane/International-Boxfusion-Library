@@ -1,7 +1,6 @@
-import React, { FC,useEffect, useRef, useState } from 'react';
-import type { SelectProps } from 'antd';
-import { Select, Space } from 'antd';
 import { useInterestAction, useInterestState } from '@/providers/InterestProvider';
+import { Select, Space } from 'antd';
+import { FC, useEffect } from 'react';
 import { useInterestHelper } from '../../../utilis/interests/helper';
 
 
