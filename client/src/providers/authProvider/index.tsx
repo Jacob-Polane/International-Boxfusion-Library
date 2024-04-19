@@ -1,4 +1,5 @@
 'use client'
+<<<<<<< HEAD
 import { message } from 'antd';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
@@ -10,33 +11,50 @@ import { useSearchActionContext } from '../searchProvider';
 import { loginUserRequestAction, logOutUserRequestAction, setCurrentUserRequestAction } from './actions';
 import { INITIAL_STATE, IUserActionContext, IUserStateContext, UserActionContext, UserContext } from './context';
 import { reducer } from './reducer';
+=======
+import React, { FC, PropsWithChildren, useContext, useReducer } from 'react';
+import { message } from 'antd';
+import { useMutate } from 'restful-react';
+import { useRouter } from 'next/navigation';
+import { reducer} from './reducer';
+import { INITIAL_STATE, IUserActionContext, IUserStateContext, UserActionContext, UserContext } from './context';
+import { loginUserRequestAction,logOutUserRequestAction,setCurrentUserRequestAction} from './actions';
+import { ILogin ,IUser} from '../../../models/interface';
+import axios from 'axios';
+import { useLocalStorage } from 'react-use';
+import { delay } from 'lodash';
+import useAxios from '..';
+import { useSearchActionContext } from '../searchProvider';
+import { useInterestAction } from '../InterestProvider';
+
+>>>>>>> c5ea7cbf416650cbef8c5e50d0393d7faf8e88e8
 
 const AuthProvider: FC<PropsWithChildren<{}>> = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
   const { push } = useRouter();
+<<<<<<< HEAD
   const {getRecommendedIntial} =useSearchActionContext();
   const {getInterestsIntialise}=useInterestAction();
+=======
+  const [local,setlocal]=useLocalStorage("token");
+  const[role]=useLocalStorage("isLibrarian");
+  const {instance}=useAxios();
+>>>>>>> c5ea7cbf416650cbef8c5e50d0393d7faf8e88e8
 
-// Create a new Axios instance with default configuration
-const instance = axios.create({
-  baseURL: `${process.env.NEXT_PUBLIC_API_BASE_URI}`,
-  headers: {
-    'Content-Type': 'application/json'
-  }
-});
+  const {trendingBooks,getBookTrending,getRecommended}=useSearchActionContext();
+  const {getInterests}=useInterestAction();
   
-  
+
   const { mutate: createUserHttp } = useMutate({
     path: `${process.env.NEXT_PUBLIC_API_BASE_URI}services/app/Borrower/Create`,
     verb: 'POST',
   });
 
 
-
-
   const login = async (payload: ILogin) => {
         await instance.post('TokenAuth/Authenticate',payload).then(async (response)=>
           {
+<<<<<<< HEAD
             console.log(getInterestsIntialise)
             localStorage.setItem('token', response.data.result.accessToken)
            
@@ -48,14 +66,25 @@ const instance = axios.create({
 
             if(getInterestsIntialise&&localStorage.getItem('isLibrarian')==''){getInterestsIntialise(response.data.result.accessToken)}
 
+=======
+            
+            setlocal(response.data.result.accessToken);
+            console.log(response.data.result.accessToken,'token')
+            delay(()=>(console.log("hello")),1000)
+>>>>>>> c5ea7cbf416650cbef8c5e50d0393d7faf8e88e8
             dispatch(loginUserRequestAction(response.data.result))
-            getUserDetails().then(()=>{
-                                        if(localStorage.getItem('isLibrarian')=='true'){
+            await getUserDetails(response.data.result.accessToken).then(()=>{
+              
+                                        if(role=='true'){
                                           push('/dashboard')
                                         }else{
                                           push("/explore");
                                         }
+                                      
                                         message.success('Login successful')
+                                        if(trendingBooks){trendingBooks()}
+                                        if(getRecommended){getRecommended()}
+                                        if(getInterests){getInterests()}
                                       }).catch(error=>{
                                                         message.error(error)
                                                         logOutUser();
@@ -71,7 +100,6 @@ const instance = axios.create({
         message.success("User successfully created Login");
         push('/login');
       } else {
-        console.log(response)
         message.error(response.error.message);
       }
     } catch (error:any) {
@@ -79,35 +107,48 @@ const instance = axios.create({
     }
   };
 
-  const getUserDetails = async () => {
-    const token = localStorage.getItem("token");
-    const user=localStorage.getItem("isLibrarian");
-    try {
-      const url=user=='false'?'services/app/Borrower/GetIdOfCurrentUser':'services/app/Librarian/GetIdOfCurrentUser';
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URI+url}`, {
-        method: 'GET',
-        cache: "no-cache",
-        headers: {
-          "Content-Type": "application/json",
-          'Authorization': `Bearer ${token}`
-        },
-      });
-      const data = await response.json();
-      console.log(data.result,'shasha')
-      if(data.result==null){
+  const getUserDetails = async (token?:any) => {
+    
+      const url=role==='false'?'services/app/Borrower/GetIdOfCurrentUser':'services/app/Librarian/GetIdOfCurrentUser';
+      console.log(local,"toeky")
+      if(!token){
+      await instance.get(`${process.env.NEXT_PUBLIC_API_BASE_URI+url}`).then(response=>{
+      if(response.data.result==null){
         throw "Select Correct User";
       }
-      dispatch(setCurrentUserRequestAction(data.result));
-      
-    } catch (error) {
+      dispatch(setCurrentUserRequestAction(response.data.result));
+    })
+    .catch( (error) =>{
       console.log(error);
       throw error;
+    })}else{
+      await instance.get(`${process.env.NEXT_PUBLIC_API_BASE_URI+url}`,{
+        headers:{
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache',
+          'Expires': '0',
+        }
+      }).then(response=>{
+      
+  
+      if(response.data.result==null){
+        throw "Select Correct User";
+      }
+      dispatch(setCurrentUserRequestAction(response.data.result));
+    })
+    .catch( (error) =>{
+      console.log(error);
+      throw error;
+    })
+
     }
-  };
+  }
 
   const logOutUser = () => {
     dispatch(logOutUserRequestAction());
-    localStorage.clear();
+    localStorage.clear()
     push('/login');
   };
 
@@ -116,6 +157,7 @@ const instance = axios.create({
   return (
     <UserContext.Provider value={{...state}}>
       <UserActionContext.Provider value={{ login, createUser, logOutUser, getUserDetails }}>
+        
         {children}
       </UserActionContext.Provider>
     </UserContext.Provider>

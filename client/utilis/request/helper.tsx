@@ -71,7 +71,6 @@ const useReqHelper=()=>{
 
     function handleStatusChange(value: number, record: IBook) {
         // Handle the status change here, you might dispatch an action if using Redux or update the state
-        console.log(`Book ID ${record.oid} - Status changed to ${value}`);
         var status:UpdateStatus={id:record.oid,status:value}
         if(changeBookState){changeBookState(status)}
     }

@@ -12,7 +12,6 @@ export const useInterestHelper =()=>{
 
     const handleClose = (removedTag: string) => {
         const newTags = tags.filter((tag) => tag !== removedTag);
-        console.log(newTags);
         setTags(newTags);
       };
     

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useLoginState } from '@/providers/authProvider';
 import { useSearchActionContext } from '@/providers/searchProvider';
 import { Col, Drawer, Row } from 'antd';
@@ -8,6 +9,23 @@ import Logo from '../../../public/Logo.jpg';
 import { useCheckAUth, useDrawer } from '../../../utilis/navbar/helper';
 import Profile from '../profile/Profile';
 import { useStyles } from "./style.module";
+=======
+'use client'
+import React,{FC, useEffect, useState} from 'react';
+import { Col, Row,Drawer } from 'antd';
+import {useStyles} from "./style.module";
+import Image from 'next/image';
+import Logo from '../../../public/Logo.jpg'
+import { useRouter } from 'next/navigation';
+import { useDrawer,useCheckAUth } from '../../../utilis/navbar/helper';
+import Profile from '../profile/Profile';
+import { useLoginState } from '@/providers/authProvider';
+import { useInterestAction } from '@/providers/InterestProvider';
+import { useLocalStorage } from 'react-use';
+import { useCommentAction } from '@/providers/commentProvider';
+import { useSearchActionContext } from '@/providers/searchProvider';
+import { useBookRequestAction } from '@/providers/requestBookprovider';
+>>>>>>> c5ea7cbf416650cbef8c5e50d0393d7faf8e88e8
 
 
 const NavBar : FC = ()=>{
@@ -18,11 +36,28 @@ const NavBar : FC = ()=>{
   const {open,onClose,showDrawer}=useDrawer();
   const {logIn,checkLogin,logOutUser}=useCheckAUth();
   const [isLibrarian,setIsLibrarian] = useState<boolean>(false);
+<<<<<<< HEAD
   const {getRecommended}=useSearchActionContext();
 
   useEffect(()=>{
     checkLogin();
     localStorage.getItem('isLibrarian')=='true'?setIsLibrarian(true):setIsLibrarian(false);
+=======
+  const action=useInterestAction();
+  const [role]=useLocalStorage("isLibrarian","");
+
+  const {clearComments}=useCommentAction();
+  const {clearBook}=useSearchActionContext();
+  const {viewHistory,clearRequest} = useBookRequestAction();
+  const {trendingBooks,getBookTrending,getRecommended}=useSearchActionContext();
+
+  useEffect(()=>{
+    checkLogin();
+    role=='true'?setIsLibrarian(true):setIsLibrarian(false);
+    if(action.getInterests){action.getInterests()};
+    if(trendingBooks){trendingBooks()}
+    if(getRecommended){getRecommended()}
+>>>>>>> c5ea7cbf416650cbef8c5e50d0393d7faf8e88e8
   },[])
 
   const explore=()=>{
@@ -107,7 +142,11 @@ const NavBar : FC = ()=>{
           md={{ flex: '40%' }}
           lg={{ flex: '20%' }}
           xl={{ flex: '15%' }}
-          onClick={()=>{if(logOutUser){logOutUser()}}}
+          onClick={()=>{
+            clearBook&&clearBook();
+            clearComments&&clearComments();
+            clearRequest&&clearRequest();
+            if(logOutUser){logOutUser()}}}
         >
 
           Logout

@@ -4,16 +4,13 @@ import { useRouter } from 'next/navigation';
 import { FC, PropsWithChildren, useContext, useReducer } from 'react';
 import instance from '..';
 import { IQuery } from '../../../models/interface';
-import { clearBooks, getBooks, getRecommendationAction, getTrendingBooksAction, searchBooks } from './action';
-import { IBookActionContext, IBookStateContext, INITIAL_STATE, searchActionContext, searchStateContext } from './context';
-import { reducer } from './reducer';
 
 
 const SearchProvider:FC<PropsWithChildren> =({children})=>{
     const {push} =useRouter();
     const [state,dispatch]=useReducer(reducer,INITIAL_STATE);
     const getState =()=>({...state})
-
+    const {instance}=useAxios();
     const trendingBooks=async ()=>{
         await instance.get('services/app/Book/GetTop10').then((response)=>dispatch(getTrendingBooksAction(response.data.result))).catch(err=>message.error('Result failed to load'));
     }
@@ -23,9 +20,7 @@ const SearchProvider:FC<PropsWithChildren> =({children})=>{
         await instance.get(`services/app/Book/SearchBooks?${query?.toString()}`).
                                                                             then(async (response)=>
                                                                                 {
-                                                                                    
                                                                                   dispatch(searchBooks(response.data.result));
-                                                                                  history.pushState({}, '', location.pathname + '?'+query.toString())
                                                                                   message.success('Results laoding');
                                                                                 }).catch(err=>message.error('Result failed to load'));             
     }
@@ -42,8 +37,6 @@ const SearchProvider:FC<PropsWithChildren> =({children})=>{
     }
 
     const getBookTrending=(index:string)=>{
-        console.log(index,"book id")
-        console.log(state.trending,"trending")
         if(state.trending){
             var item=state.trending.filter(data=>data.id==index);
             dispatch(getBooks(item[0]));

@@ -1,16 +1,22 @@
 'use client'
 import { message } from 'antd';
+<<<<<<< HEAD
 import { FC, PropsWithChildren, useContext, useReducer } from 'react';
 import instance from '..';
 import { IBook } from '../../../models/interface';
 import { deleteStateAction, requestBookAction, updateAction, viewBookAction, viewRequestedBooksAction } from './action';
 import { INITIAL_STATE, IRequest, RequestActionContext, RequestContext, UpdateStatus } from './context';
 import { reducer } from './reducer';
+=======
+import { clearRequestAction, requestBookAction, viewBookAction, viewRequestedBooksAction } from './action';
+import { IBook } from '../../../models/interface';
+import useAxios from '..';
+>>>>>>> c5ea7cbf416650cbef8c5e50d0393d7faf8e88e8
 
 const RequestProvider:FC<PropsWithChildren> = ({children})=>{
     const [state,dispatch]=useReducer(reducer,INITIAL_STATE);
     const getState=()=>({...state})
-    
+    const {instance}=useAxios();
     const requestBook =async (payload:IRequest)=>{
       await instance.post('services/app/Outbook/Create',payload).then(response=>
                                                                 {
@@ -32,17 +38,14 @@ const RequestProvider:FC<PropsWithChildren> = ({children})=>{
     const viewAllRequest =async (status:string)=>{
       await instance.get(`services/app/Outbook/GetAll?status=${status}`).then(response=>
         {
-          console.log(response.data.result.map((data:any)=>({...data.book,status:data.status,oid:data.id})))
           dispatch(viewRequestedBooksAction(response.data.result.map((data:any)=>({...data.book,status:data.status,oid:data.id}))))
         })
         .catch((response)=>message.error(response.response.data.error.message)); 
     }
 
     const changeBookState=async (payload:UpdateStatus)=>{
-      console.log(payload,'statuschange api');
       await instance.post('services/app/Outbook/Update',payload).then(response=>
         {
-          console.log(response.data.result,'db')
           viewAllRequest('');
           message.success('Request Successful');
         })
@@ -57,6 +60,7 @@ const RequestProvider:FC<PropsWithChildren> = ({children})=>{
       }).catch(response=>message.error(response.response.data.error.message()))
     }
 
+<<<<<<< HEAD
     const deleteBook =async (id:string)=>{
       await instance.delete(`services/app/Book/Delete?Id=${id}`).then(response=>{
         dispatch(deleteStateAction(state.books?.filter(x=>x.id===id)??[]))
@@ -90,6 +94,14 @@ const RequestProvider:FC<PropsWithChildren> = ({children})=>{
     return (
     <RequestContext.Provider value={getState()}>
         <RequestActionContext.Provider value={{requestBook,viewHistory,viewAllRequest,changeBookState,createBook,update,deleteBook}}>
+=======
+    const clearRequest=()=>{
+      dispatch(clearRequestAction({}))
+    }
+    return (
+    <RequestContext.Provider value={getState()}>
+        <RequestActionContext.Provider value={{requestBook,viewHistory,viewAllRequest,changeBookState,createBook,clearRequest}}>
+>>>>>>> c5ea7cbf416650cbef8c5e50d0393d7faf8e88e8
         {children}
         </RequestActionContext.Provider>
     </RequestContext.Provider>);

@@ -5,14 +5,21 @@ import { useSearchActionContext } from '../searchProvider';
 import { getInterestAction } from './action';
 import { InterestActtionContext, InterestStateContext } from './context';
 import { reducer } from './reducer';
+<<<<<<< HEAD
+=======
+import { clearRequestAction, getInterestAction } from './action';
+import { useSearchActionContext } from '../searchProvider';
+import useAxios from '..';
+>>>>>>> c5ea7cbf416650cbef8c5e50d0393d7faf8e88e8
 
 const InterestsProvider:FC<PropsWithChildren>=({children})=>{
     const [state,dispath] = useReducer(reducer,{});
+    const {instance}=useAxios();
     const {getRecommended}=useSearchActionContext();
+
     const getInterests= async ()=>{ 
         await instance.get('services/app/Borrower/GetInterests').then(response=>
             {
-                console.log(response.data.result.interestCategory);
                 dispath(getInterestAction(response.data.result.interestCategory))
             }).catch(error=>console.log(error));
 
@@ -43,9 +50,17 @@ const InterestsProvider:FC<PropsWithChildren>=({children})=>{
         }).then(error=>console.log(error));
     }
 
+    const clearRequest=()=>{
+        dispath(clearRequestAction({}))
+    }
+
     return (
         <InterestStateContext.Provider value={{...state}}>
+<<<<<<< HEAD
             <InterestActtionContext.Provider value={{getInterests,saveInterests,getInterestsIntialise}}>
+=======
+            <InterestActtionContext.Provider value={{getInterests,saveInterests,clearRequest}}>
+>>>>>>> c5ea7cbf416650cbef8c5e50d0393d7faf8e88e8
                 {children}
             </InterestActtionContext.Provider>
         </InterestStateContext.Provider>

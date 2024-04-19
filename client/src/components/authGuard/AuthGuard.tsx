@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+'use client'
+import React,{FC, PropsWithChildren,useEffect, useState} from 'react';
+>>>>>>> c5ea7cbf416650cbef8c5e50d0393d7faf8e88e8
 import { Button, Result } from 'antd';
 import { useRouter } from 'next/navigation';
 import { FC, PropsWithChildren, useEffect } from 'react';
@@ -6,7 +11,7 @@ import { useCheckAUth } from '../../../utilis/navbar/helper';
 
 const AuthGuard : FC<PropsWithChildren>=({children})=>{
     const router=useRouter();
-    const {logIn,checkLogin,logOutUser,getUserDetails}=useCheckAUth();
+    const {logIn,checkLogin}=useCheckAUth();
 
     useEffect(()=>{
         checkLogin();

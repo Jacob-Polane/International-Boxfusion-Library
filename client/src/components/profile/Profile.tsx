@@ -1,4 +1,5 @@
 'use client'
+<<<<<<< HEAD
 import { useInterestState } from '@/providers/InterestProvider';
 import { useLoginState } from '@/providers/authProvider';
 import { useBookRequestAction, useBookRequestState } from '@/providers/requestBookprovider';
@@ -8,13 +9,34 @@ import { useRouter } from 'next/navigation';
 import { FC, useEffect, useState } from 'react';
 import Logo from '../../../public/Logo.jpg';
 import { useCheckAUth } from '../../../utilis/navbar/helper';
+=======
+import React,{FC, useEffect, useState} from 'react';
+import Image from 'next/image';
+import Logo from '../../../public/Logo.jpg'
+import { useStyles } from './styles.module';
+import {Card,Row,Col,Tag,Button,Modal} from 'antd';
+import AuthGuard from '../authGuard/AuthGuard';
+import { useCheckAUth } from '../../../utilis/navbar/helper';
+import { useLoginState } from '@/providers/authProvider';
+import { useRouter } from 'next/navigation';
+import { useBookRequest, useBookRequestAction, useBookRequestState } from '@/providers/requestBookprovider';
+import { useInterestAction, useInterestState } from '@/providers/InterestProvider';
+>>>>>>> c5ea7cbf416650cbef8c5e50d0393d7faf8e88e8
 import useProfileHelper from '../../../utilis/profile/helper';
 import AuthGuard from '../authGuard/AuthGuard';
 import Interests from '../interests';
+<<<<<<< HEAD
 import { useStyles } from './styles.module';
+=======
+import { useLocalStorage } from 'react-use';
+import { useSearchActionContext } from '@/providers/searchProvider';
+import { useCommentAction } from '@/providers/commentProvider';
+
+
+>>>>>>> c5ea7cbf416650cbef8c5e50d0393d7faf8e88e8
 const Profile:FC =()=>{
     const [isLibrarian,setIsLibrarian] = useState<boolean>(false);
-
+    const [role]=useLocalStorage("isLibrarian","")
     const router=useRouter();
     
     const {styles} =useStyles();
@@ -28,10 +50,14 @@ const Profile:FC =()=>{
     const interest=useInterestState();
 
     
-    
-    const {viewHistory} = useBookRequestAction();
+    const {clearComments}=useCommentAction();
+    const {clearBook}=useSearchActionContext();
+    const {viewHistory,clearRequest} = useBookRequestAction();
     
     const logout=()=>{
+        clearBook&&clearBook();
+        clearComments&&clearComments();
+        clearRequest&&clearRequest();
         logOutUser&&logOutUser();
     }
 
@@ -46,7 +72,11 @@ const Profile:FC =()=>{
 
     useEffect(()=>{
         if(checkLogin){checkLogin()}
+<<<<<<< HEAD
         localStorage.getItem('isLibrarian')=='true'?setIsLibrarian(true):setIsLibrarian(false);
+=======
+        role=='true'?setIsLibrarian(true):setIsLibrarian(false);
+>>>>>>> c5ea7cbf416650cbef8c5e50d0393d7faf8e88e8
     },[])
 
     return (

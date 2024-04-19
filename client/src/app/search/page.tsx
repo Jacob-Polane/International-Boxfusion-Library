@@ -1,4 +1,12 @@
 'use client'
+<<<<<<< HEAD
+=======
+import React,{FC,useState,useEffect}from 'react';
+import { useRouter } from 'next/navigation';
+import {Form,type FormProps,Button,Input,List,message,Avatar, Spin} from 'antd';
+import VirtualList from 'rc-virtual-list';
+import NavBar from '@/components/navbar/NavBar';
+>>>>>>> c5ea7cbf416650cbef8c5e50d0393d7faf8e88e8
 import AuthGuard from '@/components/authGuard/AuthGuard';
 import NavBar from '@/components/navbar/NavBar';
 import { useSearchActionContext, useSearchStateContext } from '@/providers/searchProvider';
@@ -11,6 +19,10 @@ import { useSearchParam } from 'react-use';
 import { IBook, IQuery } from '../../../models/interface';
 import searchImage from '../../../public/searchImage.webp';
 import { useStyles } from './style.module';
+<<<<<<< HEAD
+=======
+import { isEmpty } from 'lodash';
+>>>>>>> c5ea7cbf416650cbef8c5e50d0393d7faf8e88e8
 
 const Search: FC =()=>{
   const searchTerm=useSearchParam('searchTerm');
@@ -19,9 +31,11 @@ const Search: FC =()=>{
   const {searchBook,clearBook,getBook}=useSearchActionContext();
   const router=useRouter();
   const {styles}=useStyles();
+ 
 
   useEffect(()=>{
     if(clearBook){clearBook()};
+<<<<<<< HEAD
     if(searchTerm!==null){
       if(onFinish)
       onFinish({searchTerm:`${searchTerm}`});
@@ -31,6 +45,22 @@ const Search: FC =()=>{
   const onFinish: FormProps<IQuery>["onFinish"] = async (values:IQuery) => {
     
     if(values.searchTerm==''){
+=======
+  
+  },[])
+
+  const onFinish: FormProps<IQuery>["onFinish"] = async (values:IQuery) => {
+    if(clearBook){clearBook()};
+
+    values.isbn=values.isbn?values.isbn:'';
+    values.author=values.author?values.author:'';
+    values.Category=values.Category?values.Category:'';
+    values.title=values.title?values.title:'';
+    if(values.isbn===''&&
+      values.author===''&&
+      values.Category===''&&
+      values.title===''){
+>>>>>>> c5ea7cbf416650cbef8c5e50d0393d7faf8e88e8
         message.error("Please enter atleast one input")
         return;
       }
@@ -59,7 +89,11 @@ const Search: FC =()=>{
   return(
   <AuthGuard>
       <div >
+<<<<<<< HEAD
         
+=======
+      
+>>>>>>> c5ea7cbf416650cbef8c5e50d0393d7faf8e88e8
          <NavBar/>
           <Form layout='inline'  
               className={styles.FormStyle} 
@@ -73,9 +107,17 @@ const Search: FC =()=>{
               <Button type="primary" htmlType='submit'>Search</Button>
             </Form.Item>
           </Form>
+<<<<<<< HEAD
 
           {(!status.books)?
           <Image  src={searchImage} alt='image' width={500} height={400} style={{marginTop:100,marginLeft:400}}></Image>         
+=======
+          {(isEmpty(status.books))?
+          <>
+            <Image  src={searchImage} alt='image' width={500} height={400} style={{marginTop:100,marginLeft:400}}></Image> 
+          </>
+                  
+>>>>>>> c5ea7cbf416650cbef8c5e50d0393d7faf8e88e8
           :<List style={{width:'100%',alignItems:'center',padding:20,display:'flex',justifyContent:'center',fontSize:20}}>
             <h1 style={{color:'#1BA1E2'}}>Results:</h1>
             <VirtualList
